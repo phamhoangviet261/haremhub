@@ -20,7 +20,7 @@ import {
 
 // change
 import POSTS from '../_mocks_/blog';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../components/_dashboard/blog';
+import { BlogPostCard, BlogPostsSort, BlogPostsSearch, PostCard } from '../components/_dashboard/blog';
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
@@ -33,7 +33,11 @@ export default function DashboardApp() {
         <Box sx={{ pb: 5 }}>
           <Alert variant="outlined" severity="info">Thư viện vẫn đang trong giai đoạn phát triển =))</Alert>
         </Box>
+        <Box mb={5}>
+          <PostCard></PostCard>
+        </Box>
         <Grid container spacing={3}>
+          
           {POSTS.map((post, index) => (
             <BlogPostCard key={post.id} post={post} index={index} />
           ))}
@@ -41,11 +45,11 @@ export default function DashboardApp() {
         <Grid container spacing={3} style={{marginTop: "20px"}}>
           
           <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate />
+            {/* <AppNewsUpdate /> */}
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline />
+            {/* <AppOrderTimeline /> */}
           </Grid>
 
           

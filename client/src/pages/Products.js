@@ -14,11 +14,13 @@ import {
 import PRODUCTS from '../_mocks_/products';
 
 // ----------------------------------------------------------------------
+import {SERVER} from '../config'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 export default function EcommerceShop({type}) {
+  type=type.toLowerCase()
   const [openFilter, setOpenFilter] = useState(false);
 
   const formik = useFormik({
@@ -50,24 +52,38 @@ export default function EcommerceShop({type}) {
   };
 
   const { pathname } = useLocation();
+  
   // state list anime for page
   const [page, setPage] = useState(1)
+  const [totalPage, setTotalPage] = useState(1)
   const handleChange = (event, value) => {
     setPage(value);
   };
   const [listAnime, setListAnime] = useState()
+  let URL = `${SERVER}/api/${type}?page=${page-1}`
+  let data = null;
+  
+  if(type == 'search') {
+    
+    URL = `${SERVER}/api/search/byName`
+    data = {
+      "value": pathname.split("=").pop()
+    }
+    console.log("data search", data);
+  }
   useEffect(() => {
     let endpoint = ''
     let method = 'POST'
     let d = axios({
     method,
-    url: `https://guarded-dusk-45135.herokuapp.com/api/${type}?page=${page-1}`,
-    data: null
+    url: URL,
+    data: data
     }).catch(err => {
     console.log(err);
     }).then(res => {
-        console.log(res.data.data)
+        console.log(res.data)
         setListAnime(res.data.data)
+        setTotalPage(res.data.totalPage)
     });
   }, [page, pathname])
   useEffect(() => {
@@ -77,7 +93,7 @@ export default function EcommerceShop({type}) {
     <Page title={`Shiro | ${type}`}>
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Danh sách {type} | Trang {page}
+          Danh sách {type}{type == 'search' ? ": " + pathname.split("=").pop() : ""} | Trang {page}
         </Typography>
 
         <Stack
@@ -104,7 +120,7 @@ export default function EcommerceShop({type}) {
       </Container>
       <Stack spacing={2} sx={{alignItems: "center"}}>
         <Typography></Typography>
-        <Pagination count={type == 'manga' ? 50 : 3} page={page} onChange={handleChange} />
+        <Pagination count={totalPage} page={page} onChange={handleChange} />
       </Stack>
     </Page>
   );

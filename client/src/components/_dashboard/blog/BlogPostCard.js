@@ -62,7 +62,7 @@ BlogPostCard.propTypes = {
 
 export default function BlogPostCard({ post, index }) {
   const { cover, title, view, comment, share, author, createdAt } = post;
-  const latestPostLarge = index === 0;
+  const latestPostLarge = index === 0 || index === 1|| index === 3 || index === 5 || index === 8 || index === 9;
   const latestPost = index === 1 || index === 2;
 
   const POST_INFO = [
@@ -84,7 +84,7 @@ export default function BlogPostCard({ post, index }) {
                 width: '100%',
                 height: '100%',
                 position: 'absolute',
-                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72)
+                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.22)
               }
             }),
             ...(latestPostLarge && {

@@ -10,6 +10,7 @@ import { MHidden } from '../components/@material-extend';
 import { LoginForm } from '../components/authentication/login';
 import AuthSocial from '../components/authentication/AuthSocial';
 
+
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -41,20 +42,20 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   return (
-    <RootStyle title="Login | Minimal-UI">
+    <RootStyle title="Shiro | Login">
       <AuthLayout>
-        Don’t have an account? &nbsp;
+        Chưa có tài khoản thì &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
-          Get started
+          Đăng ký
         </Link>
       </AuthLayout>
 
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Hi, Welcome Back
+            Yahalost =))
           </Typography>
-          <img src="/static/illustrations/banner_login.jpg" alt="login" />
+          <img src="/static/illustrations/login.jpg" alt="login" />
         </SectionStyle>
       </MHidden>
 
@@ -62,9 +63,9 @@ export default function Login() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Sign in to Minimal
+              Đăng nhập để trải nghiệm 
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>Điền thông tin dưới đây.</Typography>
           </Stack>
           <AuthSocial />
 
@@ -72,10 +73,11 @@ export default function Login() {
 
           <MHidden width="smUp">
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-              Don’t have an account?&nbsp;
+              Chưa có tài khoản thì&nbsp;
               <Link variant="subtitle2" component={RouterLink} to="register">
-                Get started
+                Đăng ký
               </Link>
+              ở đây
             </Typography>
           </MHidden>
         </ContentStyle>

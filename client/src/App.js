@@ -24,7 +24,7 @@ export default function App() {
         token: userToken,
         email: userEmail,
         role: 'User',
-        photoURL: '/static/illustrations/banner_login.jpg',
+        photoURL: '/static/illustrations/login.jpg',
         updateUsername: (un) => {
           setUsername(un)
           localStorage.setItem('username', un)

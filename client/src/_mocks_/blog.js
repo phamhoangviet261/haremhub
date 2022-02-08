@@ -6,16 +6,16 @@ import { mockImgCover } from '../utils/mockImages';
 
 const POST_TITLES = [
   'Whiteboard Templates By Industry Leaders',
-  'Tesla Cybertruck-inspired camper trailer for Tesla fans who can’t just wait for the truck!',
-  'Designify Agency Landing Page Design',
+  'Tên cậu là clgt!!',
+  '8 Viên bi rồng Z',
   '✨What is Done is Done ✨',
-  'Fresh Prince',
-  'Six Socks Studio',
-  'vincenzo de cotiis’ crossing over showcases a research on contamination',
-  'Simple, Great Looking Animations in Your Project | Video Tutorial',
-  '40 Free Serif Fonts for Digital Designers',
-  'Examining the Evolution of the Typical Web Design Client',
-  'Katie Griffin loves making that homey art',
+  'Sword Art Online chuẩn bị ra phần mới',
+  'Shiro: ♥ ',
+  'Tháng 4 là lới nói dối của em',
+  'Simple is the best',
+  '♥',
+  'Demon Slayer: Kimetsu no Yaiba',
+  'Sunset...',
   'The American Dream retold through mid-century railroad graphics',
   'Illustration System Design',
   'CarZio-Delivery Driver App SignIn/SignUp',
@@ -31,7 +31,7 @@ const POST_TITLES = [
   'How to Animate a SVG with border-image'
 ];
 
-const posts = [...Array(23)].map((_, index) => ({
+const posts = [...Array(10)].map((_, index) => ({
   id: faker.datatype.uuid(),
   cover: mockImgCover(index + 1),
   title: POST_TITLES[index + 1],
@@ -42,7 +42,7 @@ const posts = [...Array(23)].map((_, index) => ({
   favorite: faker.datatype.number(),
   author: {
     name: faker.name.findName(),
-    avatarUrl: `/static/mock-images/avatars/avatar_${index + 1}.jpg`
+    avatarUrl: `/static/mock-images/avatars/waifu_${index + 1}.jpg`
   }
 }));
 

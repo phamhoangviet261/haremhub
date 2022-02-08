@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import {Typography, Box, Grid, Paper, Divider, Chip, Alert, Breadcrumbs, Link, List, ListItem, ListItemText, ListItemAvatar, Avatar  } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
+import {SERVER} from '../config'
 
 import Flag from 'react-world-flags'
 
@@ -27,22 +28,37 @@ const ProductImgStyle = styled('img')({
 
 function Anime() {
     const location = useLocation();
-    const id = location.pathname.split('&').pop();
+    let id = ''
     console.log(location.pathname);
     const type = location.pathname.split('/')[1]
     const [data, setData] = useState()
     const [link, setLink] = useState([])
     const { pathname } = useLocation();
     let URL = ``;
-    if(type == 'anime') URL = `https://guarded-dusk-45135.herokuapp.com/api/anime/animeid/${id}`
-    if(type == 'manga') URL = `https://guarded-dusk-45135.herokuapp.com/api/manga/mangaid/${id}`
+    let dataPost = null
+    if(type == 'anime') {
+      id = location.pathname.split('&').pop();
+      URL = `${SERVER}/api/anime/animeid/${id}`
+    }
+    else if(type == 'manga') {
+      id = location.pathname.split('&').pop();
+      URL = `${SERVER}/api/manga/mangaid/${id}`
+    }
+    else if(type == 'search') {
+      URL = `${SERVER}/api/search/byName`
+      data = {
+        "value": location.pathname.split('?').pop()
+      }
+    }
+    console.log("URL", URL);
     useEffect(() => {
         let endpoint = ''
         let method = 'POST'
+        
         let d = axios({
         method,
         url: URL,
-        data: null
+        data: dataPost
         }).catch(err => {
         console.log(err);
         }).then(res => {

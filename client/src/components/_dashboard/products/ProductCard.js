@@ -51,9 +51,10 @@ export default function ShopProductCard({ type, product, index }) {
   const handleOpen = () => {
     setOpen(true);
   };
+  const typeLink = product.type == "novel" ? "manga" : product.type
   return (
     <Tooltip open={open} onClose={handleClose} onOpen={handleOpen} title={<TooltipSide description={description} tags={tags} genres={genres}></TooltipSide>} placement="right-start">
-      <Link to={`/${type}/${name.split(' ').join('-')+'&'+id}`} state={{id: id}} color="inherit" underline="hover" component={RouterLink}>
+      <Link to={`/${typeLink}/${name.toLowerCase().split(' ').join('-')+'&'+id}`} state={{id: id}} color="inherit" underline="hover" component={RouterLink}>
       <Card sx={{cursor: 'pointer'}}>
         <Box sx={{ pt: '100%', position: 'relative' }}>
           {status && (

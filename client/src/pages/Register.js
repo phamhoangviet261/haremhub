@@ -41,20 +41,20 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Register() {
   return (
-    <RootStyle title="Register | Minimal-UI">
+    <RootStyle title="Shiro | Register">
       <AuthLayout>
-        Already have an account? &nbsp;
+        Có tài khoản rồi thì &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
-          Login
+          Đăng nhập
         </Link>
       </AuthLayout>
 
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Manage the job more effectively with Minimal
+          Join with Shiro
           </Typography>
-          <img alt="register" src="/static/illustrations/illustration_register.png" />
+          <img alt="register" src="/static/illustrations/register.png"  style={{maxHeight: "400px"}}/>
         </SectionStyle>
       </MHidden>
 
@@ -62,10 +62,10 @@ export default function Register() {
         <ContentStyle>
           <Box sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Get started absolutely free.
+              Đăng ký ở đây 
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-              Free forever. No credit card needed.
+              Chúng tôi cam kết không đánh cắp thông tin người dùng =))
             </Typography>
           </Box>
 
@@ -74,22 +74,22 @@ export default function Register() {
           <RegisterForm />
 
           <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-            By registering, I agree to Minimal&nbsp;
+            Bằng cách đăng ký, bạn đồng ý với&nbsp;
             <Link underline="always" sx={{ color: 'text.primary' }}>
-              Terms of Service
+              Điều khoản dịch vụ
             </Link>
-            &nbsp;and&nbsp;
+            &nbsp;và&nbsp;
             <Link underline="always" sx={{ color: 'text.primary' }}>
-              Privacy Policy
+              Chính sách bảo mật
             </Link>
             .
           </Typography>
 
           <MHidden width="smUp">
             <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
-              Already have an account?&nbsp;
+              Có tài khoản rồi thì&nbsp;
               <Link to="/login" component={RouterLink}>
-                Login
+                Đăng nhập
               </Link>
             </Typography>
           </MHidden>

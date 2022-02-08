@@ -26,11 +26,11 @@ export default function Router() {
         // { path: 'user', element: <User /> },
         { 
           path: 'manga', 
-          element: <Products type={'manga'}/> 
+          element: <Products type={'Manga'}/> 
         },
         { 
           path: 'anime', 
-          element: <Products type={'anime'}/>,           
+          element: <Products type={'Anime'}/>,           
         },
         { path: 'blog', element: <Blog /> }
       ]
@@ -58,6 +58,13 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: ':name', element: <Anime></Anime> },
+      ]
+    },
+    {
+      path: '/search',
+      element: <DashboardLayout />,
+      children: [
+        { path: ':name', element: <Products type={'Search'}/> },
       ]
     },
     { path: '*', element: <Navigate to="/404" replace /> }

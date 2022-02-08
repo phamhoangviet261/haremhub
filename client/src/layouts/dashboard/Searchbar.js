@@ -14,6 +14,9 @@ import {
 } from '@mui/material';
 
 // ----------------------------------------------------------------------
+import axios from 'axios'
+import {SERVER} from '../../config'
+// ----------------------------------------------------------------------
 
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
@@ -42,7 +45,7 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 
 export default function Searchbar() {
   const [isOpen, setOpen] = useState(false);
-
+  const [valueSearch, setValueSearch] = useState('')
   const handleOpen = () => {
     setOpen((prev) => !prev);
   };
@@ -51,6 +54,10 @@ export default function Searchbar() {
     setOpen(false);
   };
 
+  const handleSearch = async () => {
+    setOpen(false);
+    window.location.href=`/search/title=${valueSearch}`
+  };
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div>
@@ -74,11 +81,13 @@ export default function Searchbar() {
                     icon={searchFill}
                     sx={{ color: 'text.disabled', width: 20, height: 20 }}
                   />
-                </InputAdornment>
+                </InputAdornment>              
               }
+              // value={valueSearch}
+              onChange={(event) => {setValueSearch(event.target.value)}}
               sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
             />
-            <Button variant="contained" onClick={handleClose}>
+            <Button variant="contained" onClick={handleSearch}>
               Search
             </Button>
           </SearchbarStyle>

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
+import {SERVER} from '../../../config'
 import axios from 'axios';
 // ----------------------------------------------------------------------
 
@@ -43,7 +44,7 @@ export default function RegisterForm() {
       }
       await axios({
         method: 'post',
-        url: 'https://guarded-dusk-45135.herokuapp.com/api/auth/register',
+        url: `${SERVER}/api/auth/register`,
         data: data
       })
         .then(function (res) {
@@ -65,7 +66,7 @@ export default function RegisterForm() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
-              label="First name"
+              label="Họ"
               {...getFieldProps('firstName')}
               error={Boolean(touched.firstName && errors.firstName)}
               helperText={touched.firstName && errors.firstName}
@@ -73,7 +74,7 @@ export default function RegisterForm() {
 
             <TextField
               fullWidth
-              label="Last name"
+              label="Tên"
               {...getFieldProps('lastName')}
               error={Boolean(touched.lastName && errors.lastName)}
               helperText={touched.lastName && errors.lastName}
@@ -84,7 +85,7 @@ export default function RegisterForm() {
             fullWidth
             autoComplete="username"
             type="email"
-            label="Email address"
+            label="Địa chỉ Email"
             {...getFieldProps('email')}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
@@ -94,7 +95,7 @@ export default function RegisterForm() {
             fullWidth
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
-            label="Password"
+            label="Mật khẩu"
             {...getFieldProps('password')}
             InputProps={{
               endAdornment: (
@@ -116,7 +117,7 @@ export default function RegisterForm() {
             variant="contained"
             loading={isSubmitting}
           >
-            Register
+            Đăng ký
           </LoadingButton>
         </Stack>
       </Form>

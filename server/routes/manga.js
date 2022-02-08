@@ -16,7 +16,8 @@ router.post('/', async (req, res) => {
         data: anime,
         mangaPerPage: perPage,
         page: page,
-        totalMangas: 1194
+        totalMangas: 1194,
+        totalPage: 50
     }
     res.json(result)
 })
@@ -29,7 +30,7 @@ router.post('/mangaid/:id', async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-    console.log(anime);
+    
     res.json(anime)
 })
 

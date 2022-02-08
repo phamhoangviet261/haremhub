@@ -22,6 +22,7 @@ const authRoute =  require('./routes/auth')
 app.use('/api/auth', authRoute)
 app.use('/api/manga', require('./routes/manga'))
 app.use('/api/anime', require('./routes/anime'))
+app.use('/api/search', require('./routes/search'))
 app.get('/', (req, res) => {
     return res.json("cccccccccccccccccccccccccccc")
 })
