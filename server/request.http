@@ -1,0 +1,3 @@
+POST http://localhost:5000/api/manga/mangaid/e76f1a4f-d21a-4f50-9472-45737f7f1480
+Content-Type: application/json
+
