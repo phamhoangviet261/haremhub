@@ -113,6 +113,12 @@ const AnimeSchema = new Schema({
     },
     _id: {
         type: String
+    },
+    avgRating: {
+        type: Number
+    },
+    comment: {
+        type: Array
     }
 })
 

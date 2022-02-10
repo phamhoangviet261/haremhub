@@ -6,14 +6,14 @@ const Manga = require('../models/Manga')
 router.post('/', async (req, res) => {
     const perPage = 24, page = Math.max(0, req.query.page)
     
-    const anime = await Manga.find()        
+    const manga = await Manga.find()        
         .limit(perPage)
         .skip(perPage * page)
         .sort({
             name: 'asc'
         })
     const result = {
-        data: anime,
+        data: manga,
         mangaPerPage: perPage,
         page: page,
         totalMangas: 1194,
@@ -23,15 +23,23 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/mangaid/:id', async (req, res) => {
-    console.log("id", req.params.id);
-    let anime
+    
+    let manga
     try {
-        anime = await Manga.findById(req.params.id).exec()
+        manga = await Manga.findById(req.params.id).exec()
     } catch (error) {
         console.log(error);
     }
     
-    res.json(anime)
+    res.json({success: true, data: manga})
+})
+
+router.post('/update', async (req, res) => {
+    
+    const u = await Manga.updateMany({},{$set:{comment: []}});
+    console.log(u);
+    const manga = await Manga.find().limit(2)
+    res.json(manga)
 })
 
 module.exports = router

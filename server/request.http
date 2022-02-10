@@ -1,7 +1,11 @@
-POST http://localhost:5000/api/search/byName
+POST http://localhost:5000/api/anime/comment
 Content-Type: application/json
 
 {
-    "value": "Kimi"
+    "rating": 2,
+    "content": "Test",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjAyMTcwNjhiOWM1OGQ0YmI5NTU2NmEiLCJpYXQiOjE2NDQzMTYxNjh9.d8VaOR0_l0a3all00R8MKzNBC45yYtuf0TrNsLsewgY",
+    "id": "0c163bab-0f25-428f-bd8a-9ae90d81e0bb"
 }
+
 

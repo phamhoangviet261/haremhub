@@ -2,8 +2,12 @@ import React, {useEffect, useState} from 'react';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 
-import {Typography, Box, Grid, Paper, Divider, Chip, Alert, Breadcrumbs, Link, List, ListItem, ListItemText, ListItemAvatar, Avatar  } from '@mui/material';
+import {Typography, Box, Grid, Paper, Divider, Chip, Alert, Breadcrumbs, Link, List, ListItem, ListItemText, ListItemAvatar, Avatar, Rating   } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+
+import Comment from 'src/components/_dashboard/products/Comment';
 import {SERVER} from '../config'
 
 import Flag from 'react-world-flags'
@@ -26,16 +30,29 @@ const ProductImgStyle = styled('img')({
     borderRadius: "1em"
 });
 
+const StyledRating = styled(Rating)({
+  '& .MuiRating-iconFilled': {
+    color: '#ff6d75',
+  },
+  '& .MuiRating-iconHover': {
+    color: '#ff3d47',
+  },
+});
+
 function Anime() {
     const location = useLocation();
     let id = ''
-    console.log(location.pathname);
+    // console.log(location.pathname);
     const type = location.pathname.split('/')[1]
     const [data, setData] = useState()
     const [link, setLink] = useState([])
+    const [isComment, setIsComment] = useState(false)
+
     const { pathname } = useLocation();
     let URL = ``;
-    let dataPost = null
+    let dataPost = {
+      "token": localStorage.getItem('accessToken') || ""
+    }
     if(type == 'anime') {
       id = location.pathname.split('&').pop();
       URL = `${SERVER}/api/anime/animeid/${id}`
@@ -50,7 +67,7 @@ function Anime() {
         "value": location.pathname.split('?').pop()
       }
     }
-    console.log("URL", URL);
+    // console.log("URL", URL);
     useEffect(() => {
         let endpoint = ''
         let method = 'POST'
@@ -63,8 +80,9 @@ function Anime() {
         console.log(err);
         }).then(res => {
             console.log(res.data)
-            setData(res.data)
-            setLink(Object.entries(res.data.links))
+            setData(res.data.data)
+            setLink(Object.entries(res.data.data.links))
+            setIsComment(res.data.isCommented)
         });
       }, [id, pathname])
       useEffect(() => {
@@ -99,7 +117,7 @@ function Anime() {
         <Breadcrumbs mb={3} separator="›" aria-label="breadcrumb">
             {breadcrumbs}
         </Breadcrumbs>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} id="grid-anime">
             <Grid item xs={3}>
                 <Box sx={{ pt: '100%', position: 'relative', height: "450px" }}>
                     <ProductImgStyle alt={data.name} src={data.coverArt ? data.coverArt[0] : ''} />
@@ -108,12 +126,23 @@ function Anime() {
             <Grid item xs={9}>
                 <Box sx={{display: "flex", flexDirection: "column", padding: "15px 25px 35px 25px"}}>
                     <Box>
-                    <a href="/dashboard/anime" style={{cursor: "pointer", textDecoration: "none"}}><Chip sx={{cursor: "pointer"}} color="error" label="ANIME"/></a>
-                    <Chip sx={{marginLeft: "10px"}}color="success" label={data.status.toUpperCase()}/>
-                    {data.originalLanguage && <Chip sx={{marginLeft: "10px"}}color="info" label={data.originalLanguage.toUpperCase()}/>}
+                      <a href="/dashboard/anime" style={{cursor: "pointer", textDecoration: "none", marginRight: "10px", marginTop: "10px"}}><Chip sx={{cursor: "pointer", marginTop: "10px"}} color="error" label="ANIME"/></a>
+                      <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="success" label={data.status.toUpperCase()}/>
+                      {data.originalLanguage && <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="info" label={data.originalLanguage.toUpperCase()}/>}
+                      <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="secondary" label={"Score: " + parseInt(data.score)/10}/>
                     </Box>
                     <Typography variant='h3' sx={{fontFamily: "'Quicksand', sans-serif", fontSize: "42px !important", fontWeight: "800"}}>{data.name.toUpperCase()}</Typography>
                     <Typography sx={{fontWeight: "700"}}>{data.altTitle}</Typography>
+                    <StyledRating
+                      name="customized-color"
+                      defaultValue={data.avgRating}
+                      getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
+                      precision={1}
+                      icon={<FavoriteIcon fontSize="inherit" />}
+                      emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                      readOnly
+                      sx={{marginTop: "10px"}}
+                    />
                     <Box sx={{marginTop: "20px"}}>
                         {data.staff && data.staff.map((s, index) => <Chip key={index} sx={{margin: "5px", cursor: "pointer"}} label={s} color="primary" clickable/>)}
                     </Box>
@@ -131,55 +160,61 @@ function Anime() {
                     <Box>
                         {data.genres && data.genres.map((genre, index) => <Chip key={index} sx={{margin: "5px", cursor: "pointer"}} label={genre} color="warning" variant="outlined" clickable/>)}
                     </Box>
-                    
+                    {/* list links to view */}
+                    <Divider sx={{margin: "10px 0"}}></Divider>
+                    <Typography>Danh sách đọc:</Typography>
+                    <Grid container sx={{width: "auto"}}>
+                      
+                      <List sx={{ width: '100%', maxWidth: 500, bgcolor: 'rgb(33, 43, 54)', borderRadius: "2em", marginTop: "20px" }}>
+                        <Box sx={{maxHeight: "240px", overflowY: "auto", width: 'calc(100% - 10px)'}} id="style-2">
+                        <Grid container sx={{width: "calc( 100% - 10px)", height: "50px", bgcolor: "#6373817a", borderRadius: "2em", margin: "5px 10px"}}>
+                          <Grid item xs={9}><Typography sx={{color: "#fff",lineHeight: "50px", marginLeft: "30px"}}>Site</Typography></Grid>
+                          <Grid item xs={3}><Typography sx={{color: "#fff",lineHeight: "50px", marginLeft: "20px"}}>Ngôn ngữ</Typography></Grid>
+                        </Grid>
+                        {
+                          link && link.map((l, index1) => {                
+                            return <div key={index1}>
+                            {l && l[1].map((l1, index2) => {
+                              
+                              return <ListItem style={{paddingLeft: "25px"}} key={index2}>
+                                <Grid item xs={10} sx={{display: "flex", marginTop: "1em"}}>
+                                  <ListItemAvatar>
+                                    <Avatar>
+                                      <LinkIcon />
+                                    </Avatar>
+                                  </ListItemAvatar>
+                                  <Box sx={{display: "flex", flexDirection: "column", width: "300px"}}>
+                                    <ListItemText primary={l1.site} sx={{color: "#fff"}}/>
+                                    <Typography noWrap sx={{color: "#2065d1"}}><a href={l1.link} style={{color: "#2065d1", fontSize: "12px"}}>{l1.link}</a></Typography>
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={2} sx={{color: "#fff"}}>
+                                  {l[0] == 'en' 
+                                    ? <Flag style={{maxWidth: "50%"}} code={'gb'} /> 
+                                    : l[0] == 'vi' 
+                                      ? <Flag style={{maxWidth: "50%"}} code={'vn'}/> 
+                                      : <Flag style={{maxWidth: "50%"}} code={'jp'} />
+                                  }
+                                </Grid>
+                              </ListItem>
+                            })}
+                            </div>
+                          }               
+                          )
+                        }
+                        </Box>
+                      </List>
+                    </Grid>
+
+                    {/* Comment */}
+                    <Divider sx={{margin: "20px 0 0 0"}}></Divider>
+                    <Comment comments={data.comment} id={data.id} type={data.type} isComment={isComment}></Comment>
                 </Box>
                 
             </Grid>
 
         </Grid>
-        {/* list links to view */}
-        <Grid container sx={{width: "auto"}}>
-          
-          <List sx={{ width: '100%', maxWidth: 500, bgcolor: 'rgb(33, 43, 54)', borderRadius: "2em", marginTop: "50px" }}>
-            <Box sx={{maxHeight: "240px", overflowY: "auto", width: 'calc(100% - 10px)'}} id="style-2">
-            <Grid container sx={{width: "calc( 100% - 10px)", height: "50px", bgcolor: "#6373817a", borderRadius: "2em", margin: "5px 10px"}}>
-              <Grid item xs={9}><Typography sx={{color: "#fff",lineHeight: "50px", marginLeft: "30px"}}>Site</Typography></Grid>
-              <Grid item xs={3}><Typography sx={{color: "#fff",lineHeight: "50px", marginLeft: "20px"}}>Ngôn ngữ</Typography></Grid>
-            </Grid>
-            {
-              link && link.map((l, index1) => {                
-                return <div key={index1}>
-                {l && l[1].map((l1, index2) => {
-                  
-                  return <ListItem style={{paddingLeft: "25px"}} key={index2}>
-                    <Grid item xs={10} sx={{display: "flex", marginTop: "1em"}}>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <LinkIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <Box sx={{display: "flex", flexDirection: "column", width: "300px"}}>
-                        <ListItemText primary={l1.site} sx={{color: "#fff"}}/>
-                        <Typography noWrap sx={{color: "#2065d1"}}><a href={l1.link} style={{color: "#2065d1", fontSize: "12px"}}>{l1.link}</a></Typography>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={2} sx={{color: "#fff"}}>
-                      {l[0] == 'en' 
-                        ? <Flag style={{maxWidth: "50%"}} code={'gb'} /> 
-                        : l[0] == 'vi' 
-                          ? <Flag style={{maxWidth: "50%"}} code={'vn'}/> 
-                          : <Flag style={{maxWidth: "50%"}} code={'jp'} />
-                      }
-                    </Grid>
-                  </ListItem>
-                })}
-                </div>
-              }               
-              )
-            }
-            </Box>
-          </List>
-        </Grid>
+        
         <Box mt={5}>
             <Alert severity="info">Data clone từ server của <a href="https://zennomi.web.app/">Zennomi</a></Alert>
         </Box>

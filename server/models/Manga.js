@@ -153,6 +153,12 @@ const MangaSchema = new Schema({
     _id: {
         type: String        
     },
+    avgRating: {
+        type: Number
+    },
+    comment: {
+        type: Array
+    }
 })
 
 module.exports = mongoose.model('mangas', MangaSchema)

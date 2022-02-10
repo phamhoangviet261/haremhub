@@ -59,7 +59,47 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #6373817a;
   }
-    
+  
+  .snackbar-anime{
+
+  }
+  .snackbar-anime > div{
+    background-color: transparent;
+  }
+  @media only screen and (max-width: 768px){
+    #postcard{
+      flex-direction: column;
+    }
+    #postcard > div{
+      max-width: 100%;
+      margin-top: 20px;
+    }
+    #postcard > #cardMe{
+      
+    }
+    #grid-anime{
+      flex-direction: column;
+    }
+    #grid-anime > div, img{
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+  @media only screen and (max-width: 426px){
+    #postcard{
+      flex-direction: column;
+    }
+    #postcard > div{
+      max-width: 100%;
+      margin-top: 20px;
+    }
+    #cardMe{
+      flex-direction: column;
+    }
+    #cardMe > div {
+      max-width: 100%;
+    }
+  }
 </style>
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
