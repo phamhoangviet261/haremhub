@@ -79,10 +79,11 @@ let CommentBox = ({id, type, isComment}) => { //id: anime id or manga id
     const handleSubmitComment= async () => {
         console.log({content, rating, id, token: localStorage.getItem('accessToken')});
         const data = {content, rating, id, token: localStorage.getItem('accessToken')}
+        console.log(`${SERVER}/api/${type}/comment`);
         if(localStorage.getItem('accessToken')){
             await axios({
                 method: 'post',
-                url: `${SERVER}/api/${type}/comment`,
+                url: `${SERVER}/api/${type == 'anime' ? 'anime' : 'manga'}/comment`,
                 data: data
               })
             .then(function (res) {
@@ -94,7 +95,7 @@ let CommentBox = ({id, type, isComment}) => { //id: anime id or manga id
             
         }
     }
-    console.log("isComment", isComment);
+    
     return <Card variant="outlined" sx={{margin: "15px 0 80px 0"}}>
         
         <CardContent>
@@ -207,13 +208,13 @@ function PositionedSnackbar({content = "I luv u"}) {
       <div>
         {buttons}
         <Snackbar
-            autoHideDuration={1000}
+            autoHideDuration={1500}
           anchorOrigin={{ vertical, horizontal }}
           open={open}
           onClose={handleClose}
           message={content}
           key={vertical + horizontal}
-          style={{backgroundColor: "#ff7979"}}
+          style={{backgroundColor: "#30336b"}}
           className="snackbar-anime"
         />
       </div>

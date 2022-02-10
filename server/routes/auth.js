@@ -81,4 +81,12 @@ router.get('/', (req, res) => {
     res.send('smt')
 })
 
+router.post('/updateWishlist', async (req, res) => {
+    
+    const u = await User.updateMany({},{$set:{wishlist: []}});
+    console.log(u);
+    const wl = await User.find().limit(2)
+    res.json(wl)
+})
+
 module.exports = router

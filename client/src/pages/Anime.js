@@ -2,10 +2,13 @@ import React, {useEffect, useState} from 'react';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 
-import {Typography, Box, Grid, Paper, Divider, Chip, Alert, Breadcrumbs, Link, List, ListItem, ListItemText, ListItemAvatar, Avatar, Rating   } from '@mui/material';
+import {Typography, Box, Grid, Paper, Divider, Chip, Alert, Breadcrumbs, 
+  Link, List, ListItem, ListItemText, ListItemAvatar, Avatar, Rating, Tooltip, IconButton   } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 
 import Comment from 'src/components/_dashboard/products/Comment';
 import {SERVER} from '../config'
@@ -63,11 +66,11 @@ function Anime() {
     }
     else if(type == 'search') {
       URL = `${SERVER}/api/search/byName`
-      data = {
+      dataPost= {
         "value": location.pathname.split('?').pop()
       }
     }
-    // console.log("URL", URL);
+    // console.log("URL", data);
     useEffect(() => {
         let endpoint = ''
         let method = 'POST'
@@ -85,6 +88,7 @@ function Anime() {
             setIsComment(res.data.isCommented)
         });
       }, [id, pathname])
+
       useEffect(() => {
         window.scrollTo(0, 0);
       }, [id, pathname]);
@@ -93,6 +97,28 @@ function Anime() {
         // event.preventDefault();
         console.info('You clicked a breadcrumb.');
       }
+
+      const addToWishList = async ({id}) => {
+        if(localStorage.getItem('accessToken')){
+          const data = {
+            "id": id,
+            "token": localStorage.getItem('accessToken')
+          }
+          console.log(data, `${SERVER}/api/${type == 'anime' ? 'anime' : 'manga'}/addToWishlist`);
+          await axios({
+            method: 'post',
+            url: `${SERVER}/api/${type == 'anime' ? 'anime' : 'manga'}/addToWishlist`,
+            data: data
+          })
+          .then(function (res) {
+              console.log(res);
+              
+              
+              // location.reload()
+          });
+        }
+      }
+
       const breadcrumbs = [
         <Link underline="hover" key="1" color="inherit" href="/" onClick={handleClick}>
           Trang chủ
@@ -113,7 +139,8 @@ function Anime() {
 
   return <>
     {data && <Box sx={{ flexGrow: 1, margin: "0 25px" }}>
-        <Typography mb={2}>{data.name}</Typography>
+        {/* <Typography mb={2}>{data.name}</Typography> */}
+        <Alert variant="outlined" severity="info" sx={{marginBottom: "20px"}}>Thư viện vẫn đang trong giai đoạn phát triển nên thông tin các bộ có thể còn thiếu sót</Alert>
         <Breadcrumbs mb={3} separator="›" aria-label="breadcrumb">
             {breadcrumbs}
         </Breadcrumbs>
@@ -130,6 +157,16 @@ function Anime() {
                       <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="success" label={data.status.toUpperCase()}/>
                       {data.originalLanguage && <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="info" label={data.originalLanguage.toUpperCase()}/>}
                       <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="secondary" label={"Score: " + parseInt(data.score)/10}/>
+                      <Tooltip title="Add to whishlist">
+                        <IconButton sx={{marginTop: "6px"}} onClick={() => addToWishList(data)}>
+                          <FavoriteBorderOutlinedIcon color='error'/>
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Remove from whishlist">
+                        <IconButton sx={{marginTop: "6px"}}>
+                          <FavoriteOutlinedIcon color='error'/>
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                     <Typography variant='h3' sx={{fontFamily: "'Quicksand', sans-serif", fontSize: "42px !important", fontWeight: "800"}}>{data.name.toUpperCase()}</Typography>
                     <Typography sx={{fontWeight: "700"}}>{data.altTitle}</Typography>

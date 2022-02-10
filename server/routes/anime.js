@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
 // @route POST /api/animeid/:id
 // find anime by name
 router.post('/animeid/:id', async (req, res) => {
-    console.log("token", req.body.token);
+    
         
     try {
         const anime = await Anime.findById(req.params.id).exec()
@@ -51,6 +51,7 @@ router.post('/animeid/:id', async (req, res) => {
         return res.json({success: true, data: anime, isCommented: isComment})
     } catch (error) {
         console.log(error);
+        return res.json({success: false, data: []})
     }
     
     
@@ -93,6 +94,31 @@ router.post('/comment', async (req, res) => {
         return res.json({success: false})
     }
     
+})
+
+router.post('/addToWishlist', async (req, res) => {
+    const {id, token} = req.body
+    const { userId } = jwt.decode(token)
+
+    // check data
+    if(!userId || !id || !token){
+        return res.json({success: false, data: {}})
+    }
+    // get user
+    const user = await User.findById(userId)
+    // get list wishlist from user
+    let wl = user.wishlist
+    console.log("wl", wl);
+    // push anime/manga id to wishlist
+    wl.push(id)
+    console.log("wl", wl);
+    // update to DB
+    const result = User.updateOne({
+        _id: userId
+    }, {wishlist: ['asd']}, { upsert: true })
+    
+    const userSave = await User.findById(userId)
+    return res.json({success: true, data: result})
 })
 
 module.exports = router

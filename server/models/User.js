@@ -23,6 +23,9 @@ const UserSchema = new Schema({
     createAt: {
         type: Date,
         default: Date.now()
+    },
+    wishlist: {
+        type: Array
     }
 })
 
