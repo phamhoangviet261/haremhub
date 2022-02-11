@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import axios from 'axios';
 
 import {Typography, Box, Grid, Paper, Divider, Chip, Alert, Breadcrumbs, 
-  Link, List, ListItem, ListItemText, ListItemAvatar, Avatar, Rating, Tooltip, IconButton   } from '@mui/material';
+  Link, List, ListItem, ListItemText, ListItemAvatar, Avatar, Rating, Tooltip, IconButton, Snackbar   } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -50,6 +50,9 @@ function Anime() {
     const [data, setData] = useState()
     const [link, setLink] = useState([])
     const [isComment, setIsComment] = useState(false)
+    const [isWishlist, setIsWishlist] = useState(false)
+
+    const [openSnackbar, setOpenSnackbar] = useState(false)
 
     const { pathname } = useLocation();
     let URL = ``;
@@ -82,10 +85,11 @@ function Anime() {
         }).catch(err => {
         console.log(err);
         }).then(res => {
-            console.log(res.data)
+            console.log(res.data.data)
             setData(res.data.data)
             setLink(Object.entries(res.data.data.links))
             setIsComment(res.data.isCommented)
+            setIsWishlist(res.data.isWishlist)
         });
       }, [id, pathname])
 
@@ -114,7 +118,36 @@ function Anime() {
               console.log(res);
               
               
-              // location.reload()
+              // window.location.reload()
+              if(res.data.success){
+                setIsWishlist(true)
+                setOpenSnackbar(true)
+              }
+          });
+        }
+      }
+
+      const removeFromWishList = async ({id}) => {
+        if(localStorage.getItem('accessToken')){
+          const data = {
+            "id": id,
+            "token": localStorage.getItem('accessToken')
+          }
+          console.log(data, `${SERVER}/api/${type == 'anime' ? 'anime' : 'manga'}/removeFromWishList`);
+          await axios({
+            method: 'post',
+            url: `${SERVER}/api/${type == 'anime' ? 'anime' : 'manga'}/removeFromWishList`,
+            data: data
+          })
+          .then(function (res) {
+              console.log(res);
+              
+              
+              // window.location.reload()
+              if(res.data.success){
+                setIsWishlist(false)
+                setOpenSnackbar(true)
+              }
           });
         }
       }
@@ -130,7 +163,7 @@ function Anime() {
           href="/dashboard/anime"
           onClick={handleClick}
         >
-          Anime
+          {type.toLocaleUpperCase()}
         </Link>,
         <Typography key="3" color="text.primary">
           {data && data.name}
@@ -157,16 +190,32 @@ function Anime() {
                       <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="success" label={data.status.toUpperCase()}/>
                       {data.originalLanguage && <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="info" label={data.originalLanguage.toUpperCase()}/>}
                       <Chip sx={{marginRight: "10px", marginTop: "10px"}}color="secondary" label={"Score: " + parseInt(data.score)/10}/>
-                      <Tooltip title="Add to whishlist">
+                      {!isWishlist ? <Tooltip title="Add to whishlist">
                         <IconButton sx={{marginTop: "6px"}} onClick={() => addToWishList(data)}>
                           <FavoriteBorderOutlinedIcon color='error'/>
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Remove from whishlist">
-                        <IconButton sx={{marginTop: "6px"}}>
+                      : <Tooltip title="Remove from whishlist">
+                        <IconButton sx={{marginTop: "6px"}} onClick={() => removeFromWishList(data)}>
                           <FavoriteOutlinedIcon color='error'/>
                         </IconButton>
-                      </Tooltip>
+                      </Tooltip>}
+                      <Snackbar
+                        autoHideDuration={1500}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                        open={openSnackbar}
+                        onClose={() => setOpenSnackbar(false)}
+                        message={isWishlist ? 'Thêm vào wishlist thành công.' : 'Xoá khỏi wishlist thành công.'}                        
+                        style={{}}
+                        className="snackbar-anime"
+                      >
+                        <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
+                        {isWishlist ? 'Thêm vào wishlist thành công.' : 'Xoá khỏi wishlist thành công.'} 
+                        </Alert>
+                      </Snackbar>
                     </Box>
                     <Typography variant='h3' sx={{fontFamily: "'Quicksand', sans-serif", fontSize: "42px !important", fontWeight: "800"}}>{data.name.toUpperCase()}</Typography>
                     <Typography sx={{fontWeight: "700"}}>{data.altTitle}</Typography>
@@ -202,7 +251,7 @@ function Anime() {
                     <Typography>Danh sách đọc:</Typography>
                     <Grid container sx={{width: "auto"}}>
                       
-                      <List sx={{ width: '100%', maxWidth: 500, bgcolor: 'rgb(33, 43, 54)', borderRadius: "2em", marginTop: "20px" }}>
+                      <List sx={{ width: '100%', maxWidth: 700, bgcolor: 'rgb(33, 43, 54)', borderRadius: "2em", marginTop: "20px" }}>
                         <Box sx={{maxHeight: "240px", overflowY: "auto", width: 'calc(100% - 10px)'}} id="style-2">
                         <Grid container sx={{width: "calc( 100% - 10px)", height: "50px", bgcolor: "#6373817a", borderRadius: "2em", margin: "5px 10px"}}>
                           <Grid item xs={9}><Typography sx={{color: "#fff",lineHeight: "50px", marginLeft: "30px"}}>Site</Typography></Grid>
@@ -244,14 +293,14 @@ function Anime() {
                     </Grid>
 
                     {/* Comment */}
-                    <Divider sx={{margin: "20px 0 0 0"}}></Divider>
-                    <Comment comments={data.comment} id={data.id} type={data.type} isComment={isComment}></Comment>
+                    {/* <Divider sx={{margin: "20px 0 0 0"}}></Divider> */}
+                    
                 </Box>
                 
             </Grid>
 
         </Grid>
-        
+        <Comment comments={data.comment} id={data.id} type={data.type} isComment={isComment}></Comment>
         <Box mt={5}>
             <Alert severity="info">Data clone từ server của <a href="https://zennomi.web.app/">Zennomi</a></Alert>
         </Box>

@@ -28,7 +28,7 @@ router.post('/mangaid/:id', async (req, res) => {
     
     try {
         const anime = await Manga.findById(req.params.id).exec()
-
+        let isWishlist = false
         let isComment = false
         if(req.body.token != ""){
             const { userId } = jwt.decode(req.body.token)    
@@ -39,9 +39,10 @@ router.post('/mangaid/:id', async (req, res) => {
                     isComment = true
                 }
             })
+            if(user.wishlist.includes(req.params.id)) isWishlist = true
         }
         
-        return res.json({success: true, data: anime, isCommented: isComment})
+        return res.json({success: true, data: anime, isCommented: isComment, isWishlist})
     } catch (error) {
         console.log(error);
         return res.json({success: false, data: []})
@@ -86,9 +87,62 @@ router.post('/comment', async (req, res) => {
     
 })
 
+
 router.post('/addToWishlist', async (req, res) => {
     const {id, token} = req.body
-    return res.json({id, token})
+    const { userId } = jwt.decode(token)
+
+    // check data
+    if(!userId || !id || !token){
+        return res.json({success: false, data: {}})
+    }
+    
+    // get user
+    const user = await User.findById(userId)
+    // check exist in wishlist
+    const isExist = user.wishlist.includes(id)
+    if(isExist){
+        return res.json({success: false, data: {}, isExist})
+    }
+    // get list wishlist from user
+    let wl = [...user.wishlist]
+    // push anime/manga id to wishlist
+    wl.push(id)
+    // update to DB
+    const result = await User.updateOne({
+        _id: userId
+    }, {wishlist: wl}, { upsert: true })
+    
+    
+    return res.json({success: true, data: {}, isExist})
+})
+
+router.post('/removeFromWishlist', async (req, res) => {
+    const {id, token} = req.body
+    const { userId } = jwt.decode(token)
+
+    // check data
+    if(!userId || !id || !token){
+        return res.json({success: false, data: {}})
+    }
+    
+    // get user
+    const user = await User.findById(userId)
+    // check exist in wishlist
+    const isExist = user.wishlist.includes(id)
+    if(!isExist){
+        return res.json({success: false, data: {}})
+    }
+    // get list wishlist from user
+    let wl = [...user.wishlist].filter(item => item != id)
+    
+    // update to DB
+    const result = await User.updateOne({
+        _id: userId
+    }, {wishlist: wl}, { upsert: true })
+    
+    
+    return res.json({success: true, data: {}})
 })
 
 module.exports = router

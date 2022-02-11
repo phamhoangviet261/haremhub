@@ -1,11 +1,9 @@
-POST http://localhost:5000/api/anime/comment
+POST http://localhost:5000/api/anime/addToWishlist
 Content-Type: application/json
 
 {
-    "rating": 2,
-    "content": "Test",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjAyMTcwNjhiOWM1OGQ0YmI5NTU2NmEiLCJpYXQiOjE2NDQzMTYxNjh9.d8VaOR0_l0a3all00R8MKzNBC45yYtuf0TrNsLsewgY",
-    "id": "0c163bab-0f25-428f-bd8a-9ae90d81e0bb"
+    "id": "62f6be56-d4cc-477d-88f0-6c4502f13b0f",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjAyMTcwNjhiOWM1OGQ0YmI5NTU2NmEiLCJpYXQiOjE2NDQ0OTI2NzJ9.S0MFmDHm7NNWvuJR_M_gg3fox7V_fhWZ2ORSxsdMc2g"
 }
 
 

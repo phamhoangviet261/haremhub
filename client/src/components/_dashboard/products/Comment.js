@@ -1,10 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {Box, Card, CardContent, Button, Typography,
     CardActions, Rating, TextField, Snackbar, Alert, Collapse } from '@mui/material/'
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+
 import { styled } from '@mui/material/styles';
 import axios from 'axios'
 import { SERVER } from '../../../config'
@@ -41,7 +45,7 @@ let MiniComment = ({time, name, rating, comment}) => {
                 sx={{marginTop: "10px"}}
             />
             
-            <Typography variant="h4" component="div">
+            <Typography variant="h6" component="div">
                 {name}
             </Typography>
             <Typography sx={{ fontSize: 12}} color="text.secondary" gutterBottom>
@@ -53,12 +57,64 @@ let MiniComment = ({time, name, rating, comment}) => {
         </CardContent>
         {localStorage.getItem('accessToken')  ? 
         <CardActions>
+          <NoMaxWidthTooltip title={<TooltipReaction></TooltipReaction>} placement="top-start">
             <Button size="small">Like</Button>
-            <Button size="small">Reply</Button>
-            <Button size="small">Delete</Button>
+          </NoMaxWidthTooltip>
+          <Button size="small">Trả lời</Button>
+          <Button size="small" color="error">Báo cáo</Button>
         </CardActions>
         : <></>}
     </Card>
+}
+
+// use this for long tooltip
+const NoMaxWidthTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 'none',
+    backgroundColor: 'transparent'
+  },
+});
+
+let TooltipReaction = () => {
+  return <Box sx={{}}>
+    <Button size="small">
+      <Tooltip title="Thích" placement="top">
+        <img src="/static/icons/like.png" alt="ICON_LIKE"/>
+      </Tooltip>
+    </Button>
+    <Button size="small">
+      <Tooltip title="Yêu thích" placement="top">
+        <img src="/static/icons/love.png" alt="ICON_LOVE"/>
+      </Tooltip>
+    </Button>
+    <Button size="small">
+      <Tooltip title="Thương thương" placement="top">
+        <img src="/static/icons/care.png" alt="ICON_CARE"/>
+      </Tooltip>
+    </Button>
+    <Button size="small">
+      <Tooltip title="Haha" placement="top">
+        <img src="/static/icons/haha.png" alt="ICON_HAHA"/>
+      </Tooltip>
+    </Button>
+    <Button size="small">
+      <Tooltip title="Wow" placement="top">
+        <img src="/static/icons/wow.png" alt="ICON_WOW"/>
+      </Tooltip>
+    </Button>
+    <Button size="small">
+      <Tooltip title="Buồn" placement="top">
+        <img src="/static/icons/sad.png" alt="ICON_SAD"/>
+      </Tooltip>
+    </Button>
+    <Button size="small">
+      <Tooltip title="Phẫn nộ" placement="top">
+        <img src="/static/icons/angry.png" alt="ICON_ANGRY"/>
+      </Tooltip>
+    </Button>
+  </Box>
 }
 
 let CommentBox = ({id, type, isComment}) => { //id: anime id or manga id
@@ -121,15 +177,18 @@ let CommentBox = ({id, type, isComment}) => { //id: anime id or manga id
             {/* <Typography sx={{ fontSize: 16}}>
                 
             </Typography> */}
-            <TextField id="outlined-basic" label="Content" 
+            <TextField id="outlined-basic" label="Nội dung" 
                 variant="outlined" 
                 fullWidth 
                 value={content}
                 onChange={handleChange} sx={{}}/>
         </CardContent>
         <CardActions>
-            <Button disabled={isComment} size="medium" onClick={handleSubmitComment}>Comment</Button>            
+            <Button disabled={isComment} size="medium" onClick={handleSubmitComment}>Bình luận</Button>            
         </CardActions>
+        {isComment && <Alert variant='info' sx={{ mb: 1 }}>
+            Bạn đã bình luận nên không thể bình luận nữa!
+            </Alert>}
         <Collapse in={open}>
             <Alert
             action={
@@ -146,7 +205,7 @@ let CommentBox = ({id, type, isComment}) => { //id: anime id or manga id
             }
             sx={{ mb: 2 }}
             >
-            Comment successfully!
+            Bình luận thành công!
             </Alert>
         </Collapse>
     </Card>
@@ -163,8 +222,8 @@ function Comment({comments, id, type, isComment}) {
         return `${commentHour}:${commentMinute}:${commentSecond} ${commentDate}/${commentMonth}/${commentYear}`
     }
   return <Box sx={{ minWidth: 275, margin: "20px 0px"}}>
-        <Typography variant="h4" component="div" gutterBottom>Comments:</Typography>
-        <PositionedSnackbar></PositionedSnackbar>
+        <Typography variant="h4" component="div" gutterBottom>Bình luận:</Typography>
+        
         {localStorage.getItem('accessToken') 
             ? <CommentBox id={id} type={type} isComment={isComment}></CommentBox> 
             : <Alert>Đăng nhập để bình luận</Alert>}
