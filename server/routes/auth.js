@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const argon2 = require('argon2') // DO NOT USE IT
+ // DO NOT USE IT
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken')
 
@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
         }
         
         // fine
-        // const hashedPassword = await argon2.hash(password)
+        
         // generate salt to hash password
         const salt = await bcrypt.genSalt(10);
         // now we set user password to hashed password
@@ -66,7 +66,7 @@ router.post('/login', async (req, res) => {
         }
 
         // found user
-        // const passwordValid = argon2.verify(user.password, password)
+        
         const passwordValid = await bcrypt.compare(user.password, password);
         if(!passwordValid){
             return res.status(400).json({success: false, message: 'Incorrect email or password'})
