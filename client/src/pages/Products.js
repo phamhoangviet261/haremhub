@@ -79,7 +79,7 @@ export default function EcommerceShop({type}) {
     url: URL,
     data: data
     }).catch(err => {
-    console.log(err);
+      console.log(err);
     }).then(res => {
         console.log(res.data)
         setListAnime(res.data.data)

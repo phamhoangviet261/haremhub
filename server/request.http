@@ -1,9 +1,21 @@
-POST http://localhost:5000/api/anime/addToWishlist
+POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-    "id": "62f6be56-d4cc-477d-88f0-6c4502f13b0f",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjAyMTcwNjhiOWM1OGQ0YmI5NTU2NmEiLCJpYXQiOjE2NDQ0OTI2NzJ9.S0MFmDHm7NNWvuJR_M_gg3fox7V_fhWZ2ORSxsdMc2g"
+    "email": "test@gmail.com",
+    "password": "1",
+    "firstname": "Admin",
+    "lastname": "N1"
+}
+
+###
+
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "1"
 }
 
 
