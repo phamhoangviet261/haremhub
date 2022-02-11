@@ -10,7 +10,7 @@ const User = require('../models/User')
 // @desc register new user
 // @access public
 router.post('/register', async (req, res) => {   
-    console.log("reg", req.body); 
+    // console.log("reg", req.body); 
     const {email, password, firstname, lastname} = req.body;
     
     // Validation
@@ -26,10 +26,11 @@ router.post('/register', async (req, res) => {
         // fine
         
         // generate salt to hash password
-        const salt = await bcrypt.genSalt(10);
+        // const salt = await bcrypt.genSalt(10);
         // now we set user password to hashed password
-        const hashedPassword = await bcrypt.hash(password, salt);
-        // console.log("hashedPassword", hashedPassword);
+        
+        const hashedPassword = await bcrypt.hash(password, '$2b$10$o/hktJ4aYLFo3zuvTU80mO');
+        // console.log("hashedPassword register", hashedPassword);
         const newUser = new User({
             email: email,
             password: hashedPassword,
@@ -53,7 +54,7 @@ router.post('/register', async (req, res) => {
 // @access public
 router.post('/login', async (req, res) => {
     const {email, password} = req.body;
-    console.log(req.body);
+    // console.log("body", req.body);
     // Validation
     if(!email || !password) return res.status(400).json({success: false, message: 'Missing email or password'})
 
@@ -66,8 +67,11 @@ router.post('/login', async (req, res) => {
         }
 
         // found user
-        
-        const passwordValid = await bcrypt.compare(user.password, password);
+        // const hashedPassword = await bcrypt.hash(password, '$2b$10$o/hktJ4aYLFo3zuvTU80mO');
+        // console.log("user.password          ", user.password)
+        // console.log("hashedPassword login   ", hashedPassword);
+        const passwordValid = await bcrypt.compareSync(password, user.password);
+        // console.log("passwordValid", passwordValid)
         if(!passwordValid){
             return res.status(400).json({success: false, message: 'Incorrect email or password'})
         }

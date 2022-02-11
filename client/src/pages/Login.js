@@ -53,7 +53,7 @@ export default function Login() {
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Yahalost =))
+            Yahalost
           </Typography>
           <img src="/static/illustrations/login.jpg" alt="login" />
         </SectionStyle>
@@ -74,7 +74,7 @@ export default function Login() {
           <MHidden width="smUp">
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
               Chưa có tài khoản thì&nbsp;
-              <Link variant="subtitle2" component={RouterLink} to="register">
+              <Link variant="subtitle2" component={RouterLink} to="/register">
                 Đăng ký
               </Link>
               ở đây
