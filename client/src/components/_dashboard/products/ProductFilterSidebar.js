@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import { Form, FormikProvider } from 'formik';
 import closeFill from '@iconify/icons-eva/close-fill';
@@ -13,6 +13,7 @@ import {
   Drawer,
   Rating,
   Divider,
+  Slider,
   Checkbox,
   FormGroup,
   IconButton,
@@ -24,6 +25,170 @@ import {
 import Scrollbar from '../../Scrollbar';
 import ColorManyPicker from '../../ColorManyPicker';
 
+// ----------------------------------------------------------------------
+import React, { useState, useEffect, useContext, forwardRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios'
+import { SERVER } from 'src/config';
+
+import PropTypes from 'prop-types';
+import MultiSelectUnstyled from '@mui/base/MultiSelectUnstyled';
+import { selectUnstyledClasses } from '@mui/base/SelectUnstyled';
+import OptionUnstyled, { optionUnstyledClasses } from '@mui/base/OptionUnstyled';
+import PopperUnstyled from '@mui/base/PopperUnstyled';
+import { styled } from '@mui/system';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+
+const blue = {
+  100: '#DAECFF',
+  200: '#99CCF3',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  900: '#003A75',
+};
+
+const grey = {
+  100: '#E7EBF0',
+  200: '#E0E3E7',
+  300: '#CDD2D7',
+  400: '#B2BAC2',
+  500: '#A0AAB4',
+  600: '#6F7E8C',
+  700: '#3E5060',
+  800: '#2D3843',
+  900: '#1A2027',
+};
+
+const StyledButton = styled('button')(
+  ({ theme }) => `
+  font-family: IBM Plex Sans, sans-serif;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+  min-height: calc(1.5em + 22px);
+  min-width: 320px;
+  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
+  border-radius: 0.75em;
+  margin: 0.5em;
+  padding: 10px;
+  text-align: left;
+  line-height: 1.5;
+  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+
+  &:hover {
+    background: ${theme.palette.mode === 'dark' ? '' : grey[100]};
+    border-color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
+  }
+
+  &.${selectUnstyledClasses.focusVisible} {
+    outline: 3px solid ${theme.palette.mode === 'dark' ? blue[600] : blue[100]};
+  }
+
+  &.${selectUnstyledClasses.expanded} {
+    &::after {
+      content: '▴';
+    }
+  }
+
+  &::after {
+    content: '▾';
+    float: right;
+  }
+  `,
+);
+
+const StyledListbox = styled('ul')(
+  ({ theme }) => `
+  font-family: IBM Plex Sans, sans-serif;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+  padding: 5px;
+  margin: 10px 0;
+  min-width: 320px;
+  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
+  border-radius: 0.75em;
+  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  overflow: auto;
+  outline: 0px;
+  `,
+);
+
+const StyledOption = styled(OptionUnstyled)(
+  ({ theme }) => `
+  list-style: none;
+  padding: 8px;
+  border-radius: 0.45em;
+  cursor: default;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  &.${optionUnstyledClasses.selected} {
+    background-color: ${theme.palette.mode === 'dark' ? blue[900] : blue[100]};
+    color: ${theme.palette.mode === 'dark' ? blue[100] : blue[900]};
+  }
+
+  &.${optionUnstyledClasses.highlighted} {
+    background-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[100]};
+    color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  }
+
+  &.${optionUnstyledClasses.highlighted}.${optionUnstyledClasses.selected} {
+    background-color: ${theme.palette.mode === 'dark' ? blue[900] : blue[100]};
+    color: ${theme.palette.mode === 'dark' ? blue[100] : blue[900]};
+  }
+
+  &.${optionUnstyledClasses.disabled} {
+    color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
+  }
+
+  &:hover:not(.${optionUnstyledClasses.disabled}) {
+    background-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[100]};
+    color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  }
+  `,
+);
+
+const StyledPopper = styled(PopperUnstyled)`
+  z-index: 1;
+`;
+
+const CustomMultiSelect = React.forwardRef(function CustomMultiSelect(props, ref) {
+  const components = {
+    Root: StyledButton,
+    Listbox: StyledListbox,
+    Popper: StyledPopper,
+    ...props.components,
+  };
+
+  return <MultiSelectUnstyled {...props} ref={ref} components={components} />;
+});
+
+CustomMultiSelect.propTypes = {
+  /**
+   * The components used for each slot inside the Select.
+   * Either a string to use a HTML element or a component.
+   * @default {}
+   */
+  components: PropTypes.shape({
+    Listbox: PropTypes.elementType,
+    Popper: PropTypes.elementType,
+    Root: PropTypes.elementType,
+  }),
+};
+
+const StyledRating = styled(Rating)({
+  '& .MuiRating-iconFilled': {
+    color: '#ff6d75',
+  },
+  '& .MuiRating-iconHover': {
+    color: '#ff3d47',
+  },
+});
 // ----------------------------------------------------------------------
 
 export const SORT_BY_OPTIONS = [
@@ -66,9 +231,50 @@ export default function ShopFilterSidebar({
   onResetFilter,
   onOpenFilter,
   onCloseFilter,
-  formik
+  formik,
+  type
 }) {
   const { values, getFieldProps, handleChange } = formik;
+
+  const {pathname} = useLocation()
+  const [tags, setTags] = useState()
+  const [genres, setGenres] = useState()
+  const [score, setScore] = useState([0, 100])
+  const [rating, setRating] = useState(3)
+
+  // call pai get all tags
+  useEffect(() => {
+    
+    let endpoint = ''
+    let method = 'GET'
+    let d = axios({
+    method,
+    url: `${SERVER}/api/${type}/tags`,
+    data: null
+    }).catch(err => {
+      console.log(err);
+    }).then(res => {
+        console.log(res.data)   
+        setTags(res.data.tags)     
+    });
+  }, [pathname])
+
+  // call api get all gến
+  useEffect(() => {
+    
+    let endpoint = ''
+    let method = 'GET'
+    let d = axios({
+    method,
+    url: `${SERVER}/api/${type}/genres`,
+    data: null
+    }).catch(err => {
+      console.log(err);
+    }).then(res => {
+        console.log(res.data)  
+        setGenres(res.data.genres)      
+    });
+  }, [pathname])
 
   return (
     <>
@@ -88,7 +294,7 @@ export default function ShopFilterSidebar({
             open={isOpenFilter}
             onClose={onCloseFilter}
             PaperProps={{
-              sx: { width: 280, border: 'none', overflow: 'hidden' }
+              sx: { width: 380, border: 'none', overflow: 'hidden' }
             }}
           >
             <Stack
@@ -111,10 +317,10 @@ export default function ShopFilterSidebar({
               <Stack spacing={3} sx={{ p: 3 }}>
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Gender
+                    Tags
                   </Typography>
                   <FormGroup>
-                    {FILTER_GENDER_OPTIONS.map((item) => (
+                    {/* {FILTER_GENDER_OPTIONS.map((item) => (
                       <FormControlLabel
                         key={item}
                         control={
@@ -126,39 +332,45 @@ export default function ShopFilterSidebar({
                         }
                         label={item}
                       />
-                    ))}
+                    ))} */}
+                    <CustomMultiSelect defaultValue={[]} >                      
+                      {tags && tags.map((item, index) => <StyledOption key={index} value={item}>{item}</StyledOption>)}                    
+                    </CustomMultiSelect>
                   </FormGroup>
                 </div>
 
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Category
+                    Genres
                   </Typography>
-                  <RadioGroup {...getFieldProps('category')}>
+                  {/* <RadioGroup {...getFieldProps('category')}>
                     {FILTER_CATEGORY_OPTIONS.map((item) => (
                       <FormControlLabel key={item} value={item} control={<Radio />} label={item} />
                     ))}
-                  </RadioGroup>
+                  </RadioGroup> */}
+                  <CustomMultiSelect defaultValue={[]} style={{width: '50%'}}>
+                    {genres && genres.map((item, index) => <StyledOption key={index} value={item}>{item}</StyledOption>)}                    
+                  </CustomMultiSelect>
                 </div>
 
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Colour
+                    Status
                   </Typography>
-                  <ColorManyPicker
-                    name="colors"
-                    colors={FILTER_COLOR_OPTIONS}
-                    onChange={handleChange}
-                    onChecked={(color) => values.colors.includes(color)}
-                    sx={{ maxWidth: 36 * 4 }}
-                  />
+                  <CustomMultiSelect defaultValue={[]} style={{width: '50%'}}>
+                      <StyledOption value={10}>Ten</StyledOption>
+                      <StyledOption value={20}>Twenty</StyledOption>
+                      <StyledOption value={30}>Thirty</StyledOption>
+                      <StyledOption value={40}>Forty</StyledOption>
+                      <StyledOption value={50}>Fifty</StyledOption>
+                    </CustomMultiSelect>
                 </div>
 
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
-                    Price
+                    Score
                   </Typography>
-                  <RadioGroup {...getFieldProps('priceRange')}>
+                  {/* <RadioGroup {...getFieldProps('priceRange')}>
                     {FILTER_PRICE_OPTIONS.map((item) => (
                       <FormControlLabel
                         key={item.value}
@@ -167,14 +379,23 @@ export default function ShopFilterSidebar({
                         label={item.label}
                       />
                     ))}
-                  </RadioGroup>
+                  </RadioGroup> */}
+                  <Box sx={{ width: 300 }}>
+                    <Slider
+                      getAriaLabel={() => 'Temperature range'}
+                      value={score}
+                      onChange={(e, newValue) => setScore(newValue)}
+                      valueLabelDisplay="auto"
+                      // getAriaValueText={valuetext}
+                    />
+                  </Box>
                 </div>
 
                 <div>
                   <Typography variant="subtitle1" gutterBottom>
                     Rating
                   </Typography>
-                  <RadioGroup {...getFieldProps('rating')}>
+                  {/* <RadioGroup {...getFieldProps('rating')}>
                     {FILTER_RATING_OPTIONS.map((item, index) => (
                       <FormControlLabel
                         key={item}
@@ -202,7 +423,16 @@ export default function ShopFilterSidebar({
                         }}
                       />
                     ))}
-                  </RadioGroup>
+                  </RadioGroup> */}
+                  <StyledRating
+                    name="simple-controlled"
+                    value={rating}
+                    onChange={(event, newValue) => {
+                      setRating(newValue);
+                    }}
+                    icon={<FavoriteIcon fontSize="inherit" />}
+                    emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                  />
                 </div>
               </Stack>
             </Scrollbar>

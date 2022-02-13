@@ -11,21 +11,48 @@ var ObjectId = mongoose.Types.ObjectId;
 // get anime by page
 router.post('/', async (req, res) => {
     const perPage = 20, page = Math.max(0, req.query.page)
-    
-    const anime = await Anime.find()        
+    console.log('body', req.body)
+    let dataOrder = {}
+    switch (req.body.orderBy) {
+        case 'score':
+            dataOrder = {
+                score: 'desc'
+            }
+            break;
+        case 'newest':
+            dataOrder = {
+                createAt: 'asc'
+            }
+            break;
+        case 'nameASC':
+            dataOrder = {
+                name: 'asc'
+            }
+            break;
+        case 'nameDESC':
+            dataOrder = {
+                name: 'desc'
+            }
+            break;
+        default:
+            break;
+    }
+    try {
+        const anime = await Anime.find()        
         .limit(perPage)
         .skip(perPage * page)
-        .sort({
-            name: 'asc'
-        })
-    const result = {
-        data: anime,
-        animePerPage: perPage,
-        page: page,
-        totalAnime: 47, 
-        totalPage: 3
+        .sort(dataOrder)
+        const result = {
+            data: anime,
+            animePerPage: perPage,
+            page: page,
+            totalAnime: 47, 
+            totalPage: 3
+        }
+        return res.json(result)
+    } catch (error) {
+        console.log(error)
     }
-    res.json(result)
 })
 
 // @route POST /api/animeid/:id
@@ -128,7 +155,6 @@ router.post('/addToWishlist', async (req, res) => {
     return res.json({success: true, data: {}, isExist})
 })
 
-
 router.post('/removeFromWishlist', async (req, res) => {
     const {id, token} = req.body
     const { userId } = jwt.decode(token)
@@ -155,6 +181,30 @@ router.post('/removeFromWishlist', async (req, res) => {
     
     
     return res.json({success: true, data: {}})
+})
+
+router.get('/tags', async (req, res) => {
+    const anime = await Anime.find({}).select('tags')
+    const t = []
+    for(let i = 0; i < anime.length; i++){        
+        for(let j = 0; j < anime[i].tags.length; j++){
+            t.push(anime[i].tags[j])
+        }
+    }
+    const tags = [...new Set(t)]
+    return res.json({tags})
+})
+
+router.get('/genres', async (req, res) => {
+    const anime = await Anime.find({}).select('genres')
+    const t = []
+    for(let i = 0; i < anime.length; i++){        
+        for(let j = 0; j < anime[i].genres.length; j++){
+            t.push(anime[i].genres[j])
+        }
+    }
+    const genres = [...new Set(t)]
+    return res.json({genres})
 })
 
 module.exports = router

@@ -4,28 +4,60 @@ const Manga = require('../models/Manga')
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 
+// @route GET all manga
+router.get('/', async (req, res) => {
+    const manga = await Manga.find()    
+    return res.json({data: manga})
+})
+
 // @route POST api/Manga
 router.post('/', async (req, res) => {
-    const perPage = 24, page = Math.max(0, req.query.page)
-    
-    const manga = await Manga.find()        
-        .limit(perPage)
-        .skip(perPage * page)
-        .sort({
-            name: 'asc'
-        })
-    const result = {
-        data: manga,
-        mangaPerPage: perPage,
-        page: page,
-        totalMangas: 1194,
-        totalPage: 50
+    if(req.query.page){
+        const perPage = 24, page = Math.max(0, req.query.page)
+        let dataOrder = {}
+        switch (req.body.orderBy) {
+            case 'score':
+                dataOrder = {
+                    score: 'desc'
+                }
+                break;
+            case 'newest':
+                dataOrder = {
+                    createAt: 'asc'
+                }
+                break;
+            case 'nameASC':
+                dataOrder = {
+                    name: 'asc'
+                }
+                break;
+            case 'nameDESC':
+                dataOrder = {
+                    name: 'desc'
+                }
+                break;
+            default:
+                break;
+        }
+        const manga = await Manga.find()        
+            .limit(perPage)
+            .skip(perPage * page)
+            .sort(dataOrder)
+        const result = {
+            data: manga,
+            mangaPerPage: perPage,
+            page: page,
+            totalMangas: 1194,
+            totalPage: 50
+        }
+        return res.json(result)
+    } else {
+        return res.json({data: []})
     }
-    res.json(result)
 })
 
 router.post('/mangaid/:id', async (req, res) => {
-    
+    console.log(req.params.id)
     try {
         const anime = await Manga.findById(req.params.id).exec()
         let isWishlist = false

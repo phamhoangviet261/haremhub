@@ -73,10 +73,11 @@ function Anime() {
         "value": location.pathname.split('?').pop()
       }
     }
-    // console.log("URL", data);
+    // console.log("location.pathname", location.pathname);
+    // console.log("id", id)
     useEffect(() => {
         let endpoint = ''
-        let method = 'POST'
+        let method = 'post'
         
         let d = axios({
         method,
@@ -85,11 +86,11 @@ function Anime() {
         }).catch(err => {
         console.log(err);
         }).then(res => {
-            console.log(res.data.data)
-            setData(res.data.data)
-            setLink(Object.entries(res.data.data.links))
-            setIsComment(res.data.isCommented)
-            setIsWishlist(res.data.isWishlist)
+          console.log(res.data)
+          setData(res.data.data)
+          setLink(Object.entries(res.data.data.links))
+          setIsComment(res.data.isCommented)
+          setIsWishlist(res.data.isWishlist)
         });
       }, [id, pathname])
 

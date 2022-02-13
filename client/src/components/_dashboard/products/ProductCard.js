@@ -29,7 +29,7 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ type, product, index }) {
-  const { id, name, coverArt, description, status, altTitle, tags, genres } = product;
+  const { id, name, coverArt, description, status, altTitle, tags, genres, score } = product;
   
   const colors = [
     '#00AB55',
@@ -54,13 +54,14 @@ export default function ShopProductCard({ type, product, index }) {
   const typeLink = product.type == "novel" ? "manga" : product.type
   return (
     <Tooltip open={open} onClose={handleClose} onOpen={handleOpen} title={<TooltipSide description={description} tags={tags} genres={genres}></TooltipSide>} placement="right-start">
-      <Link to={`/${typeLink}/${name.toLowerCase().split(' ').join('-')+'&'+id}`} state={{id: id}} color="inherit" underline="hover" component={RouterLink}>
+      <Link to={`/${typeLink}/${name.replace('?', '').toLowerCase().split(' ').join('-')+'&'+id}`} state={{id: id}} color="inherit" underline="hover" component={RouterLink}>
       <Card sx={{cursor: 'pointer'}}>
         <Box sx={{ pt: '100%', position: 'relative' }}>
-          {status && (
-            <Label
+          {status && 
+            <Box>
+              <Label
               variant="filled"
-              color={(status === 'ongoing' && 'error') || 'info'}
+              color={'secondary'}
               sx={{
                 zIndex: 9,
                 top: 16,
@@ -69,9 +70,23 @@ export default function ShopProductCard({ type, product, index }) {
                 textTransform: 'uppercase'
               }}
             >
+              {score && `Score: ${score}`}
+            </Label>
+            <Label
+              variant="filled"
+              color={(status === 'ongoing' && 'error') || 'info'}
+              sx={{
+                zIndex: 9,
+                top: 16,
+                left: 16,
+                position: 'absolute',
+                textTransform: 'uppercase'
+              }}
+            >
               {status}
             </Label>
-          )}
+            </Box>
+          }
           <ProductImgStyle alt={name} src={coverArt ? coverArt[0] : ''} />
         </Box>
 

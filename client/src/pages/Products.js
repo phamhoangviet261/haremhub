@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext, createContext } from 'react';
 // material
 import { Container, Stack, Typography, Pagination } from '@mui/material';
 // components
@@ -17,12 +17,14 @@ import PRODUCTS from '../_mocks_/products';
 import {SERVER} from '../config'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom';
+import { orderBy } from 'lodash';
+export const OrderByContext = createContext()
 // ----------------------------------------------------------------------
 
 export default function EcommerceShop({type}) {
   type=type.toLowerCase()
   const [openFilter, setOpenFilter] = useState(false);
-
+  const [orderBy, setOrderBy] = useState('nameASC')
   const formik = useFormik({
     initialValues: {
       gender: '',
@@ -61,13 +63,16 @@ export default function EcommerceShop({type}) {
   };
   const [listAnime, setListAnime] = useState()
   let URL = `${SERVER}/api/${type}?page=${page-1}`
-  let data = null;
+  let data = {
+    orderBy: orderBy
+  };
   
   if(type == 'search') {
     
     URL = `${SERVER}/api/search/byName`
     data = {
-      "value": pathname.split("=").pop()
+      "value": pathname.split("=").pop(),
+      'orderBy': orderBy
     }
     console.log("data search", data);
   }
@@ -85,11 +90,21 @@ export default function EcommerceShop({type}) {
         setListAnime(res.data.data)
         setTotalPage(res.data.totalPage)
     });
-  }, [page, pathname])
+  }, [page, pathname, orderBy])
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [page, pathname]);
+  }, [page, pathname, orderBy]);
+
+  // useEffect for orderBy
+  // console.log("type ", type)
   return (
+    <OrderByContext.Provider value={{
+      orderBy: orderBy,
+      setOrderByContext: (value) => {
+        setOrderBy(value)
+      }
+    }}>
     <Page title={`Shiro | ${type}`}>
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
@@ -110,6 +125,7 @@ export default function EcommerceShop({type}) {
               onResetFilter={handleResetFilter}
               onOpenFilter={handleOpenFilter}
               onCloseFilter={handleCloseFilter}
+              type={type || 'anime'}
             />
             <ProductSort />
           </Stack>
@@ -123,5 +139,6 @@ export default function EcommerceShop({type}) {
         <Pagination count={totalPage} page={page} onChange={handleChange} />
       </Stack>
     </Page>
+    </OrderByContext.Provider>
   );
 }

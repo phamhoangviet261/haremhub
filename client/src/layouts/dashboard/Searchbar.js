@@ -58,6 +58,11 @@ export default function Searchbar() {
     setOpen(false);
     window.location.href=`/search/title=${valueSearch}`
   };
+  const handleKeyDown= (e) => {
+    if (e.key === 'Enter') {
+      window.location.href=`/search/title=${valueSearch}`
+    }
+  }
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div>
@@ -86,6 +91,7 @@ export default function Searchbar() {
               // value={valueSearch}
               onChange={(event) => {setValueSearch(event.target.value)}}
               sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
+              onKeyDown={handleKeyDown}
             />
             <Button variant="contained" onClick={handleSearch}>
               Search

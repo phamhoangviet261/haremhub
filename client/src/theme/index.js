@@ -19,7 +19,9 @@ ThemeConfig.propTypes = {
 export default function ThemeConfig({ children }) {
   const themeOptions = useMemo(
     () => ({
-      palette,
+      palette: {
+        mode: 'dark',
+      },
       shape,
       typography,
       shadows,

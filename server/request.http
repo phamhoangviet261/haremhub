@@ -1,21 +1,3 @@
-POST http://localhost:5000/api/auth/register
+GET http://localhost:5000/api/anime/tags
 Content-Type: application/json
-
-{
-    "email": "test-2@gmail.com",
-    "password": "1",
-    "firstname": "Admin",
-    "lastname": "N2"
-}
-
-###
-
-POST http://localhost:5000/api/auth/login
-Content-Type: application/json
-
-{
-    "email": "test@gmail.com",
-    "password": "1"
-}
-
 
