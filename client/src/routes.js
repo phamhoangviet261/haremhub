@@ -34,14 +34,6 @@ export default function Router() {
           path: 'anime', 
           element: <Products type={'Anime'}/>,           
         },
-        { 
-          path: 'map', 
-          element: <Map/>,           
-        },
-        { 
-          path: 'messenger', 
-          element: <Messenger/>,           
-        },
         { path: 'blog', element: <Blog /> }
       ]
     },
