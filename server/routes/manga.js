@@ -177,4 +177,28 @@ router.post('/removeFromWishlist', async (req, res) => {
     return res.json({success: true, data: {}})
 })
 
+router.get('/tags', async (req, res) => {
+    const anime = await Manga.find({}).select('tags')
+    const t = []
+    for(let i = 0; i < anime.length; i++){        
+        for(let j = 0; j < anime[i].tags.length; j++){
+            t.push(anime[i].tags[j])
+        }
+    }
+    const tags = [...new Set(t)]
+    return res.json({tags})
+})
+
+router.get('/genres', async (req, res) => {
+    const anime = await Manga.find({}).select('genres')
+    const t = []
+    for(let i = 0; i < anime.length; i++){        
+        for(let j = 0; j < anime[i].genres.length; j++){
+            t.push(anime[i].genres[j])
+        }
+    }
+    const genres = [...new Set(t)]
+    return res.json({genres})
+})
+
 module.exports = router

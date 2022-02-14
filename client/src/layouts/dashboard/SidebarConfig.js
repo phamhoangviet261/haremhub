@@ -32,11 +32,11 @@ const sidebarConfig = [
     path: '/dashboard/manga',
     icon: getIcon(shoppingBagFill)
   },
-  // {
-  //   title: 'blog',
-  //   path: '/dashboard/blog',
-  //   icon: getIcon(fileTextFill)
-  // },
+  {
+    title: 'Chat',
+    path: '/dashboard/messenger',
+    icon: getIcon(alertTriangleFill)
+  },
   // {
   //   title: 'login',
   //   path: '/login',

@@ -9,7 +9,7 @@ import palette from './palette';
 import typography from './typography';
 import componentsOverride from './overrides';
 import shadows, { customShadows } from './shadows';
-
+import {blue} from '@mui/material/colors';
 // ----------------------------------------------------------------------
 
 ThemeConfig.propTypes = {
@@ -21,6 +21,7 @@ export default function ThemeConfig({ children }) {
     () => ({
       palette: {
         mode: 'dark',
+        primary: blue,
       },
       shape,
       typography,

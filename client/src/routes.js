@@ -9,6 +9,8 @@ import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
 import User from './pages/User';
+import Map from './pages/Map';
+import Messenger from './pages/Messenger';
 import NotFound from './pages/Page404';
 
 // ----------------------------------------------------------------------
@@ -31,6 +33,14 @@ export default function Router() {
         { 
           path: 'anime', 
           element: <Products type={'Anime'}/>,           
+        },
+        { 
+          path: 'map', 
+          element: <Map/>,           
+        },
+        { 
+          path: 'messenger', 
+          element: <Messenger/>,           
         },
         { path: 'blog', element: <Blog /> }
       ]
@@ -65,6 +75,13 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: ':name', element: <Products type={'Search'}/> },
+      ]
+    },
+    {
+      path: '/map',
+      element: <DashboardLayout />,
+      children: [
+        { path: '', element: <Map/> },
       ]
     },
     { path: '*', element: <Navigate to="/404" replace /> }
