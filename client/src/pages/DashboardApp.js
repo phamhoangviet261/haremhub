@@ -1,5 +1,5 @@
 // material
-import { Box, Grid, Container, Typography,Alert } from '@mui/material';
+import { Box, Grid, Container, Typography,Alert, Button } from '@mui/material';
 // components
 import Page from '../components/Page';
 import {
@@ -22,13 +22,23 @@ import {
 import POSTS from '../_mocks_/blog';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch, PostCard } from '../components/_dashboard/blog';
 // ----------------------------------------------------------------------
+import { useDispatch } from 'react-redux'
+import {changeUsername} from '../redux/actions'
+// ----------------------------------------------------------------------
 
 export default function DashboardApp() {
+  const dispatch =  useDispatch();
+
+  const handleChangeUsername = () => {
+    alert('click')
+    dispatch(changeUsername("Viet"))
+  }
   return (
     <Page title="Shiro | Trang Chủ">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography variant="h4">Hi, Welcome back</Typography>
+          <Button variant="text" onClick={handleChangeUsername}>Change username</Button>
         </Box>
         <Box sx={{ pb: 5 }}>
           <Alert variant="outlined" severity="info">Thư viện vẫn đang trong giai đoạn phát triển =))</Alert>

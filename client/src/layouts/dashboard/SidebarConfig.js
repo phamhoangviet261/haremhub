@@ -33,8 +33,8 @@ const sidebarConfig = [
     icon: getIcon(shoppingBagFill)
   },
   {
-    title: 'Chat',
-    path: '/dashboard/messenger',
+    title: 'Me',
+    path: '/me',
     icon: getIcon(alertTriangleFill)
   },
   // {

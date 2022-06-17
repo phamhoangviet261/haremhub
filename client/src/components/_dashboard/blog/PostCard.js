@@ -62,7 +62,7 @@ export default function PostCard() {
 
   return (
     <Grid container style={{justifyContent: "space-between"}} id="postcard">
-      <Grid container xs={8}>
+      <Grid container>
         <Card variant="outlined" style={{width: "100%", display: "flex",justifyContent: "space-between",  backgroundColor: "#ead1d1"}} id="cardMe">
             <Grid item xs={6} sx={{padding: "10px 10px 0 10px "}}>
                 <CardContent>
@@ -76,7 +76,7 @@ export default function PostCard() {
             </Grid>
         </Card>
       </Grid>
-      <Grid item xs={3.7}>
+      <Grid item xs={8} mt={4}>
             <Card variant="outlined" style={{width: "100%", height: "100%"}}>
                 <img style={{height: "100%"}} src="/static/mock-images/covers/cover_5.jpg" alt="huhu"/>
             </Card>

@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
+import Me from './pages/Me';
 import User from './pages/User';
 import Map from './pages/Map';
 import Messenger from './pages/Messenger';
@@ -70,10 +71,10 @@ export default function Router() {
       ]
     },
     {
-      path: '/map',
+      path: '/me',
       element: <DashboardLayout />,
       children: [
-        { path: '', element: <Map/> },
+        { path: '', element: <Me/> },
       ]
     },
     { path: '*', element: <Navigate to="/404" replace /> }

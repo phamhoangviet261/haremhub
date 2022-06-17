@@ -25,7 +25,7 @@ const MENU_OPTIONS = [
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: '#'
+    linkTo: '/me'
   },
   {
     label: 'Settings',

@@ -77,9 +77,15 @@ router.post('/login', async (req, res) => {
         }
 
         //return token 
-        const accessToken = jwt.sign({userId: user._id}, process.env.ACCESS_TOKEN_SECRET)
+        const accessToken = "Bearer " + jwt.sign({userId: user._id}, process.env.ACCESS_TOKEN_SECRET)
         console.log("accessToken", accessToken);
-        return res.json({success: true, message: 'Login successfully', name: user.firstname, email:user.email, accessToken})
+        return res
+        .cookie("access_token", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+          })
+        .status(200)
+        .json({success: true, message: 'Logged in successfully', name: user.firstname, email:user.email, accessToken})
     } catch (error) {
         console.log("ERROR: ", error);
         return res.status(500).json({success: false, message: "Internal server error"})
