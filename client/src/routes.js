@@ -13,7 +13,8 @@ import User from './pages/User';
 import Map from './pages/Map';
 import Messenger from './pages/Messenger';
 import NotFound from './pages/Page404';
-
+import ListMovie from './pages/ListMovie';
+import Movie from './pages/Movie';
 // ----------------------------------------------------------------------
 import Anime from './pages/Anime';
 // ----------------------------------------------------------------------
@@ -34,6 +35,10 @@ export default function Router() {
         { 
           path: 'anime', 
           element: <Products type={'Anime'}/>,           
+        },
+        { 
+          path: 'movie', 
+          element: <ListMovie/>,           
         },
         { path: 'blog', element: <Blog /> }
       ]
@@ -61,6 +66,13 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: ':name', element: <Anime></Anime> },
+      ]
+    },
+    {
+      path: '/movie',
+      element: <DashboardLayout />,
+      children: [
+        { path: ':slug', element: <Movie></Movie> },
       ]
     },
     {

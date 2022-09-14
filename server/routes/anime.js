@@ -11,7 +11,6 @@ var ObjectId = mongoose.Types.ObjectId;
 // get anime by page
 router.post('/', async (req, res) => {
     const perPage = 20, page = Math.max(0, req.query.page)
-    console.log('body', req.body)
     let dataOrder = {}
     switch (req.body.orderBy) {
         case 'score':
@@ -66,7 +65,7 @@ router.post('/animeid/:id', async (req, res) => {
         let isComment = false
         let isWishlist = false
         if(req.body.token != ""){
-            const { userId } = jwt.decode(req.body.token)    
+            const { userId } = jwt.decode(req.body.token.split(" ")[1])    
             const user = await User.findById(userId)
             
             anime.comment.forEach(item => {
@@ -90,7 +89,7 @@ router.post('/animeid/:id', async (req, res) => {
 
 router.post('/comment', async (req, res) => {
     const { rating, content, token, id } = req.body
-    const { userId } = jwt.decode(token)
+    const { userId } = jwt.decode(token.split(" ")[1]);
     const a = await Anime.findById(id)
     
     const user = await User.findById(userId)
@@ -128,7 +127,7 @@ router.post('/comment', async (req, res) => {
 
 router.post('/addToWishlist', async (req, res) => {
     const {id, token} = req.body
-    const { userId } = jwt.decode(token)
+    const { userId } = jwt.decode(token.split(" ")[1])
 
     // check data
     if(!userId || !id || !token){
@@ -157,7 +156,7 @@ router.post('/addToWishlist', async (req, res) => {
 
 router.post('/removeFromWishlist', async (req, res) => {
     const {id, token} = req.body
-    const { userId } = jwt.decode(token)
+    const { userId } = jwt.decode(token.split(" ")[1])
 
     // check data
     if(!userId || !id || !token){

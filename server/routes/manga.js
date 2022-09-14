@@ -83,7 +83,7 @@ router.post('/mangaid/:id', async (req, res) => {
 
 router.post('/comment', async (req, res) => {
     const { rating, content, token, id } = req.body
-    const { userId } = jwt.decode(token)
+    const { userId } = jwt.decode(token.split(" ")[1])
     const a = await Manga.findById(id)
     
     const user = await User.findById(userId)
@@ -122,7 +122,7 @@ router.post('/comment', async (req, res) => {
 
 router.post('/addToWishlist', async (req, res) => {
     const {id, token} = req.body
-    const { userId } = jwt.decode(token)
+    const { userId } = jwt.decode(token.split(" ")[1])
 
     // check data
     if(!userId || !id || !token){
@@ -151,7 +151,7 @@ router.post('/addToWishlist', async (req, res) => {
 
 router.post('/removeFromWishlist', async (req, res) => {
     const {id, token} = req.body
-    const { userId } = jwt.decode(token)
+    const { userId } = jwt.decode(token.split(" ")[1])
 
     // check data
     if(!userId || !id || !token){

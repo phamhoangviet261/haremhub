@@ -33,6 +33,11 @@ const sidebarConfig = [
     icon: getIcon(shoppingBagFill)
   },
   {
+    title: 'movie',
+    path: '/dashboard/movie',
+    icon: getIcon(shoppingBagFill)
+  },
+  {
     title: 'Me',
     path: '/me',
     icon: getIcon(alertTriangleFill)

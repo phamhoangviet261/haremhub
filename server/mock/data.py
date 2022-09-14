@@ -10,10 +10,10 @@ db = myclient["shirobooking"]
    
 # Created or Switched to collection 
 # names: GeeksForGeeks
-Collection = db["animes"]
+Collection = db["movies"]
   
 # Loading or Opening the json file
-with open('dataAnime.json', encoding="utf8") as file:
+with open('dataMovie.json', encoding="utf8") as file:
     file_data = json.load(file)
       
 # Inserting the loaded data in the Collection

@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react'
 import styled from 'styled-components'
-
+import { SERVER } from 'src/config';
 import { Typography } from '@mui/material';
 
 const Container = styled.div`
@@ -17,13 +17,13 @@ const HeadWrapper = styled.div`
     background: #212130;
     padding: 20px;
     border-radius: 20px;
+    overflow: hidden;
 `;
 
 const CoverPhoto = styled.div`
     max-height: 200px;
-    
+    overflow: hidden;
     & > img {
-        max-height: 200px;
         width: max-content;
         object-fit: cover;
         border-radius: 20px;
@@ -43,6 +43,9 @@ const Avatar = styled.div`
     & > img{
         border-radius: 50%;
         overflow: hidden;
+        object-fit: cover;
+        width: 120px;
+        height: 120px;
     }
     position: absolute;   
     left: 20px;
@@ -233,8 +236,8 @@ const PostItemContainer = styled.div``;
 // End of styled
 
 const data = {
-    cover: 'https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.6435-9/126904949_2786958311591969_7967275818230567221_n.jpg?stp=dst-jpg_p960x960&_nc_cat=106&ccb=1-5&_nc_sid=e3f864&_nc_ohc=YdSG2a9tbD0AX-eTfXa&_nc_ht=scontent.fsgn2-3.fna&oh=00_AT9FFTyX7ieqhNuJSYqqxqDN_cvZmOV6hJJmmacDpvnjEw&oe=6253B747',
-    avatar: 'https://scontent.fsgn2-1.fna.fbcdn.net/v/t1.6435-9/163302622_2879287429025723_6314303068452355388_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=L1w34L-rWDQAX87UcDZ&_nc_ht=scontent.fsgn2-1.fna&oh=00_AT9Stjns_ETE6duKD1D7cTPJklDnLYLMRHTNZy-N5molpQ&oe=6253EB3E',
+    cover: 'https://images5.alphacoders.com/120/thumb-1920-1200477.jpg',
+    avatar: 'https://images4.alphacoders.com/678/thumb-1920-678317.jpg',
     name: 'Pham Hoang Viet'
 }
 
@@ -250,7 +253,7 @@ const Head = () => {
     return <HeadWrapper>
         <CoverPhoto>
             <img src={data.cover} alt="Cover-banner" />
-        </CoverPhoto>
+        </CoverPhoto>-
         <Header>
             <Avatar onClick={handleClickAvatar} ref={avt}>
                 <img src={data.avatar} alt="avatar-banner" />
@@ -298,6 +301,7 @@ const Follow = () => {
 
 const Post = () => {
     const [isHighlight, setisHighlight] = useState(false)
+    const server = SERVER;
     return <PostContainer>
         <textarea placeholder='Type something...'></textarea>
         <PostAction>
@@ -311,7 +315,7 @@ const Post = () => {
             </PostActionItem>
             <PostActionButton isHighlight={isHighlight}>Post</PostActionButton>
         </PostAction>
-        <form action="http://localhost:5000/api/image/uploadphoto" enctype="multipart/form-data" method="POST">
+        <form action={`${server}api/image/uploadphoto`} enctype="multipart/form-data" method="POST">
             <input type="file" name="myImage" accept="image/*"/>
             <input type="submit" value="Upload Photo"/>
         </form>
