@@ -29,11 +29,11 @@ router.post('/register', async (req, res) => {
         // const salt = await bcrypt.genSalt(10);
         // now we set user password to hashed password
         
-        const hashedPassword = await bcrypt.hash(password, '$2b$10$o/hktJ4aYLFo3zuvTU80mO');
+        // const hashedPassword = await bcrypt.hash(password, '$2b$10$o/hktJ4aYLFo3zuvTU80mO');
         // console.log("hashedPassword register", hashedPassword);
         const newUser = new User({
             email: email,
-            password: hashedPassword,
+            password: password,
             firstname: firstname,
             lastname: lastname
         })
@@ -70,7 +70,8 @@ router.post('/login', async (req, res) => {
         // const hashedPassword = await bcrypt.hash(password, '$2b$10$o/hktJ4aYLFo3zuvTU80mO');
         // console.log("user.password          ", user.password)
         // console.log("hashedPassword login   ", hashedPassword);
-        const passwordValid = await bcrypt.compareSync(password, user.password);
+        // const passwordValid = await bcrypt.compareSync(password, user.password);
+        const passwordValid = password == user.password;
         // console.log("passwordValid", passwordValid)
         if(!passwordValid){
             return res.status(400).json({success: false, message: 'Incorrect email or password'})
