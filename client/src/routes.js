@@ -73,6 +73,8 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: ':slug', element: <Movie></Movie> },
+        { path: 'category/:slug', element: <DashboardLayout></DashboardLayout> },
+        { path: 'search', element: <ListMovie></ListMovie> },
       ]
     },
     {

@@ -254,12 +254,13 @@ export default function ShopFilterSidebar({
     }).catch(err => {
       console.log(err);
     }).then(res => {
-        console.log(res.data)   
+        console.log(`${SERVER}/api/${type}/tags`)
+        console.log("Tags: ", res.data)   
         setTags(res.data.tags)     
     });
   }, [pathname])
 
-  // call api get all gến
+  // call api get all genres
   useEffect(() => {
     
     let endpoint = ''

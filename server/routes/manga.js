@@ -63,7 +63,7 @@ router.post('/mangaid/:id', async (req, res) => {
         let isWishlist = false
         let isComment = false
         if(req.body.token != ""){
-            const { userId } = jwt.decode(req.body.token)    
+            const { userId } = jwt.decode(req.body.token.split(" ")[1])    
             const user = await User.findById(userId)
             
             anime.comment.forEach(item => {

@@ -56,10 +56,9 @@ router.post('/', async (req, res) => {
 
 // @route POST /api/animeid/:id
 // find anime by name
-router.post('/animeid/:id', async (req, res) => {
-    
-        
+router.post('/animeid/:id', async (req, res) => {            
     try {
+        console.log("req.params.id ", req.params.id)
         const anime = await Anime.findById(req.params.id).exec()
 
         let isComment = false
@@ -205,5 +204,14 @@ router.get('/genres', async (req, res) => {
     const genres = [...new Set(t)]
     return res.json({genres})
 })
+
+router.get('/404', async (req, res, next) => {
+    try {
+        console.log('errors')
+    } catch (errors) {
+        console.log(errors);
+        return res.status(400).json({success: false, message: errors.message});
+    }
+});
 
 module.exports = router

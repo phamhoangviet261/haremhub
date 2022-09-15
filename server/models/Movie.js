@@ -14,6 +14,9 @@ const MovieSchema = new Schema({
     origin_name: {
         type: String,
     },
+    unsigned_name:{
+        type: String,
+    },
     content: {
         type: String,
     },

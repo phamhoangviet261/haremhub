@@ -17,7 +17,7 @@ import sidebarConfig from './SidebarConfig';
 import { UserContext } from 'src/App';
 // ----------------------------------------------------------------------
 
-const DRAWER_WIDTH = 220;
+const DRAWER_WIDTH = 180;
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {

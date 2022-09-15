@@ -16,10 +16,11 @@ import {
 // ----------------------------------------------------------------------
 import axios from 'axios'
 import {SERVER} from '../../config'
+import { useLocation } from "react-router-dom";
 // ----------------------------------------------------------------------
 
-const APPBAR_MOBILE = 64;
-const APPBAR_DESKTOP = 92;
+const APPBAR_MOBILE = 24;
+const APPBAR_DESKTOP = 62;
 
 const SearchbarStyle = styled('div')(({ theme }) => ({
   top: 0,
@@ -44,6 +45,7 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Searchbar() {
+  const location = useLocation();
   const [isOpen, setOpen] = useState(false);
   const [valueSearch, setValueSearch] = useState('')
   const handleOpen = () => {
@@ -56,13 +58,23 @@ export default function Searchbar() {
 
   const handleSearch = async () => {
     setOpen(false);
-    window.location.href=`/search/title=${valueSearch}`
+    if(location.pathname.split('/')[2] == 'movie'){
+      window.location.href=`/movie/search?title=${valueSearch}`
+    } else {
+      window.location.href=`/search/title=${valueSearch}`
+    }    
   };
+  
   const handleKeyDown= (e) => {
     if (e.key === 'Enter') {
-      window.location.href=`/search/title=${valueSearch}`
+      if(location.pathname.split('/')[2] == 'movie'){
+        window.location.href=`/movie/search?title=${valueSearch}`
+      } else {
+        window.location.href=`/search/title=${valueSearch}`
+      }  
     }
   }
+  
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div>

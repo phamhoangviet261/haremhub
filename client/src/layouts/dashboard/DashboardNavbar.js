@@ -19,9 +19,9 @@ import { UserContext } from 'src/App';
 
 // ----------------------------------------------------------------------
 
-const DRAWER_WIDTH = 220;
-const APPBAR_MOBILE = 64;
-const APPBAR_DESKTOP = 92;
+const DRAWER_WIDTH = 180;
+const APPBAR_MOBILE = 24;
+const APPBAR_DESKTOP = 62;
 
 const RootStyle = styled(AppBar)(({ theme }) => ({
   boxShadow: 'none',

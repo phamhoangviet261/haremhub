@@ -23,7 +23,7 @@ const sidebarConfig = [
   //   icon: getIcon(peopleFill)
   // },
   {
-    title: 'anime',
+    title: 'novel',
     path: '/dashboard/anime',
     icon: getIcon(shoppingBagFill)
   },
