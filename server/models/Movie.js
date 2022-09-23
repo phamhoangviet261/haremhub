@@ -89,3 +89,4 @@ const MovieSchema = new Schema({
 }, { timestamps: true })
 
 module.exports = mongoose.model('movies', MovieSchema)
+// module.exports = mongoose.model('phim', MovieSchema)

@@ -47,8 +47,9 @@ app.use('/api/movie', require('./routes/movie'))
 app.use('/api/search', require('./routes/search'))
 app.use('/api/post', require('./routes/post'))
 app.use('/api/image', require('./routes/image'))
+app.use('/api/crawl', require('./routes/crawl'))
 app.get('/', (req, res) => {
-    return res.json({success: false, message: "SHIRO'S SERVER"})
+    return res.json({success: false, message: "SHIRO'S SERVER. Data crawl from: https://ophim.tv/"})
 })
 const PORT = process.env.PORT || 5000
 
