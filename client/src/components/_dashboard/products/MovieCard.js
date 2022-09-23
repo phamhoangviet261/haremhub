@@ -33,7 +33,7 @@ export default function ShopProductCard({movie, index }) {
   movie.status = '';
   movie.altTitle = '';
   movie.score = 10;
-  const { id, name, slug, thumb_url, content, status, altTitle, actor, genres, score } = movie;
+  const { id, name, slug, thumb_url, content, status, origin_name, actor, genres, score } = movie;
   const colors = [
     '#00AB55',
     '#000000',
@@ -98,7 +98,7 @@ export default function ShopProductCard({movie, index }) {
               {name} 
             </Typography>
           
-          <Typography variant="subtitle2" noWrap sx={{color: "#00AB55"}}>Tên khác: {altTitle}</Typography>
+          <Typography variant="subtitle2" noWrap sx={{color: "#00AB55"}}>Tên khác: {origin_name}</Typography>
           
         </Stack>
         {/* Custom popover */}

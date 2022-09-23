@@ -16,9 +16,13 @@ import styled from 'styled-components';
 // ----------------------------------------------------------------------
 import {SERVER} from '../config'
 import axios from 'axios'
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { orderBy } from 'lodash';
 export const OrderByContext = createContext()
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 // ----------------------------------------------------------------------
 const movieGenres = [
   "Tâm Lý",
@@ -45,22 +49,39 @@ const movieGenres = [
   "Kinh Điển"
 ];
 
+const movieTypes = [
+  "Phim Mới",
+  "Phim Bộ",
+  "Phim Lẻ",
+  "TV Shows",
+  "Hoạt Hình",
+  "Pham Vietsub",
+  "Phim Thuyết Minh",
+  "Phim Lồng Tiếng",
+  "Phim Bộ Đang Chiếu",
+  "Phim Trọn Bộ",
+  "Phim Sắp Chiếu",
+  "Subteam",
+];
+
 const StyledGenreContainer = styled.span`
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 50px;
 `;
 
-const StyledGenreItem = styled.span`
+const StyledGenreItem = styled(Link)`
   padding: 10px 15px;
   cursor: pointer;
   border-radius: 10px;
+  text-decoration: none;
+  color: #fff;
   &:hover{
     background-color: #5dafec;
   }
 `;
 
-export default function ListMovie() {
+export default function ListMovie({type}) {
   
   const location = useLocation();
   
@@ -72,7 +93,7 @@ export default function ListMovie() {
   };
   const [listAnime, setListAnime] = useState([])
   
-  
+  const [genre, setGenre] = useState('');
 
   useEffect(() => {
     let URL = `${SERVER}/api/${'movie'}?page=${page-1}`;
@@ -81,13 +102,19 @@ export default function ListMovie() {
     let endpoint = ''
     let method = 'GET'
 
-    if(location.pathname.split('/')[2] == 'search'){
-      console.log('location', location)
+    if(type == 'search'){      
       URL = `${SERVER}/api/${'movie'}/search`;
       data = {
         value: location.search.split('=')[1]
       };
       method = 'POST'
+    } else if (type == 'category'){
+      console.log({location})
+      URL = `${SERVER}/api/${'movie'}/category/${location.pathname.split('/').pop()}?page=${page}`;
+      data = {
+        
+      };
+      method = 'GET'
     }
     console.log({method,
       url: URL,
@@ -102,6 +129,9 @@ export default function ListMovie() {
         console.log(res.data.data)
         setListAnime(res.data.data)
         setTotalPage(res.data.totalPage)
+        if(type == 'category'){
+          setGenre(res.data.genre);
+        }
     });
   }, [page, location.pathname, orderBy])
 
@@ -111,6 +141,21 @@ export default function ListMovie() {
 
   // useEffect for orderBy
   // console.log("type ", type)
+  function convertViToEn(str, toUpperCase = false) {
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    // Some system encode vietnamese combining accent as individual utf-8 characters
+    str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); // Huyền sắc hỏi ngã nặng
+    str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // Â, Ê, Ă, Ơ, Ư
+
+    return toUpperCase ? str.toUpperCase() : str;
+}
   return (
     
     <Page title={`Shiro | ${'movie'}`}>
@@ -118,12 +163,50 @@ export default function ListMovie() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Danh sách {'phim'} | Trang {page}
         </Typography>
-
+        {genre && <Typography variant="h4" sx={{ mb: 5 }}>Thể loại: {genre}</Typography>}
         <StyledGenreContainer>
-          <span style={{padding: '10px 15px'}}>Genres: </span>
-          {movieGenres.map(gen => <StyledGenreItem>{gen}</StyledGenreItem>)}
+          {/* <span style={{padding: '15px 15px'}}>Thể loại: </span> */}
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <InputLabel id="demo-select-small">Thể loại:</InputLabel>
+            <Select
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={''}
+              label="Thể loại:"
+              
+            >
+          {movieGenres.map((gen, index) => 
+          // <StyledGenreItem key={`gen+${index}`} to={'/movie/category/'+convertViToEn(gen.toLocaleLowerCase().split(' ').join('-'))}>{gen}</StyledGenreItem>          
+                <MenuItem value={gen}>
+                  <StyledGenreItem key={`gen+${index}`} to={'/movie/category/'+convertViToEn(gen.toLocaleLowerCase().split(' ').join('-'))}>{gen}</StyledGenreItem> 
+                </MenuItem>
+              
+          )}
+          </Select>
+            </FormControl>
         </StyledGenreContainer>
 
+        <StyledGenreContainer>
+          {/* <span style={{padding: '15px 15px'}}>Nhóm: </span> */}
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <InputLabel id="demo-select-small">Nhóm:</InputLabel>
+            <Select
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={''}
+              label="Nhóm:"
+              
+            >
+          {movieTypes.map((gen, index) => 
+          // <StyledGenreItem key={`gen+${index}`} to={'/movie/category/'+convertViToEn(gen.toLocaleLowerCase().split(' ').join('-'))}>{gen}</StyledGenreItem>          
+                <MenuItem value={gen}>
+                  <StyledGenreItem key={`gen+${index}`} to={'/movie/category/'+convertViToEn(gen.toLocaleLowerCase().split(' ').join('-'))}>{gen}</StyledGenreItem> 
+                </MenuItem>
+              
+          )}
+          </Select>
+            </FormControl>
+        </StyledGenreContainer>
         {listAnime.length > 0 ? <MovieList movies={listAnime} /> : <h2>SEARCHING MOVIE</h2>}
         {/* <ProductCartWidget /> */}
       </Container>

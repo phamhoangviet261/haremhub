@@ -13,7 +13,7 @@ export default function MovieList({ movies, ...other }) {
   return (
     <Grid container spacing={3} {...other}>
       {movies.map((movie, index) => (
-        <Grid key={movie.id} item xs={12} sm={6} md={3}>
+        <Grid key={movie._id} item xs={12} sm={6} md={3}>
           <MovieCard movie={movie} index={index}/>
         </Grid>
       ))}

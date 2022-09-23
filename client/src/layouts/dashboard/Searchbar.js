@@ -58,7 +58,7 @@ export default function Searchbar() {
 
   const handleSearch = async () => {
     setOpen(false);
-    if(location.pathname.split('/')[2] == 'movie'){
+    if(location.pathname.includes('movie')){
       window.location.href=`/movie/search?title=${valueSearch}`
     } else {
       window.location.href=`/search/title=${valueSearch}`
@@ -67,7 +67,7 @@ export default function Searchbar() {
   
   const handleKeyDown= (e) => {
     if (e.key === 'Enter') {
-      if(location.pathname.split('/')[2] == 'movie'){
+      if(location.pathname.includes('movie')){
         window.location.href=`/movie/search?title=${valueSearch}`
       } else {
         window.location.href=`/search/title=${valueSearch}`

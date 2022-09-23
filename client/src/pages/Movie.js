@@ -86,7 +86,10 @@ function Movie() {
         console.log(err);
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
+        if(!res.data.success){
+          window.location.href = '/dashboard/movie';
+        }
         setData(res.data.data);
         // setLink(Object.entries(res.data.data.links))
         // setIsComment(res.data.isCommented)
@@ -168,6 +171,20 @@ function Movie() {
                     color="secondary"
                     label={'Score: ' + parseInt(data.score) / 10}
                   />
+                  {data.country && (
+                    <Chip
+                      sx={{ marginRight: '10px', marginTop: '10px' }}
+                      color="info"
+                      label={data.country[0].name}
+                    />
+                  )}
+                  {data.lang && (
+                    <Chip
+                      sx={{ marginRight: '10px', marginTop: '10px' }}
+                      color="warning"
+                      label={data.lang}
+                    />
+                  )}
                 </Box>
                 <Typography
                   variant="h3"
@@ -179,7 +196,7 @@ function Movie() {
                 >
                   {data.name.toUpperCase()}
                 </Typography>
-                <Typography sx={{ fontWeight: '700' }}>{data.name}</Typography>
+                <Typography sx={{ fontWeight: '700' }}>{data.origin_name}</Typography>
                 <StyledRating
                   name="customized-color"
                   defaultValue={data.avgRating ? data.avgRating : 5}
