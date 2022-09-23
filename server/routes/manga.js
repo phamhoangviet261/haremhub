@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Manga = require('../models/Manga')
-const User = require('../models/User')
+const Manga = require('../models/manga')
+const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 // @route GET all manga

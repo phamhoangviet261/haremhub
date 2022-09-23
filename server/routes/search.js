@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Anime = require('../models/Anime')
-const Manga = require('../models/Manga')
+const Anime = require('../models/anime')
+const Manga = require('../models/manga')
 
 router.post('/byName', async (req, res) => {
     const name = decodeURI(req.body.value)

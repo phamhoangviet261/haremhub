@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Anime = require('../models/Anime')
-const User = require('../models/User')
+const Anime = require('../models/anime')
+const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 const mongoose = require('mongoose')

@@ -2,10 +2,10 @@ const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 
-const PostModel = require('../models/Post')
+const PostModel = require('../models/post')
 const ImageModel = require('../models/Image')
-const ReactionModel = require('../models/Reaction')
-const CommentModel = require('../models/Comment')
+const ReactionModel = require('../models/reaction')
+const CommentModel = require('../models/comment')
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'] || req.cookies['access_token']

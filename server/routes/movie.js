@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Movie = require('../models/Movie')
-const Category = require('../models/Category')
+const Movie = require('../models/movie')
+const Category = require('../models/category')
 
 
 
