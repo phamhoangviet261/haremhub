@@ -23,6 +23,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { flexbox } from '@mui/system';
 // ----------------------------------------------------------------------
 const movieGenres = [
   "Tâm Lý",
@@ -177,7 +178,7 @@ export default function ListMovie({type}) {
             >
           {movieGenres.map((gen, index) => 
           // <StyledGenreItem key={`gen+${index}`} to={'/movie/category/'+convertViToEn(gen.toLocaleLowerCase().split(' ').join('-'))}>{gen}</StyledGenreItem>          
-                <MenuItem value={gen}>
+                <MenuItem value={gen} key={`gen+${index}`}>
                   <StyledGenreItem key={`gen+${index}`} to={'/movie/category/'+convertViToEn(gen.toLocaleLowerCase().split(' ').join('-'))}>{gen}</StyledGenreItem> 
                 </MenuItem>
               
@@ -221,17 +222,18 @@ export default function ListMovie({type}) {
 const FakeSkeleton = ({rows, cols}) => {
   return <>
     <p>SEARCHING MOVIE</p>
-    
-  {
-    [1,2,3,4].map((row, indexRow) => {
-      return [1,2,3,4].map((col, indexCol) => {
-        return <Box sx={{ pt: 0.5 }} key={`${indexRow} - ${indexCol}`}>
-          <Skeleton />
-          <Skeleton />
-          <Skeleton variant="rectangular" width={210} height={118} />
-        </Box>
-      })
-    })
-  }
+    <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px'}}>
+      {
+        [1,2,3,4].map((row, indexRow) => {
+          return [1,2,3,4].map((col, indexCol) => {
+            return <Box sx={{ pt: 0.5 }} key={`${indexRow} - ${indexCol}`}>
+              <Skeleton />
+              <Skeleton />
+              <Skeleton variant="rectangular" width={210} height={118} />
+            </Box>
+          })
+        })
+      }
+    </div>
   </>
 }

@@ -24,7 +24,8 @@ function convertViToEn(str, toUpperCase = false) {
 router.get('/', async (req, res, next) => {
     try {
         let {page, limit} = req.query;
-        if(page < 0 || page > 204) page = 1;
+        const randomId = Math.floor(Math.random() * 200) + 2;
+        if(page <= 1 || page > 204) page = randomId;
         if(limit < 0 || limit > 100) limit = 20;
         const movies = await Movie.find({}).skip(page ? (page-1) * (limit ? limit : 20) + 23 : 1 + 23).limit(limit ? limit : 20);    
         // const movies = await Movie.find({})   

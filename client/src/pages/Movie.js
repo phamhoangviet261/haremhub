@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import {
@@ -63,6 +63,8 @@ const StyledRating = styled(Rating)({
 function Movie() {
   const location = useLocation();
   const slug = location.pathname.split('/')[2];
+  const navigate  = useNavigate();
+
   const [data, setData] = useState();
   const [link, setLink] = useState([]);
   const [isComment, setIsComment] = useState(false);
@@ -70,9 +72,25 @@ function Movie() {
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  function convertViToEn(str, toUpperCase = false) {
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    // Some system encode vietnamese combining accent as individual utf-8 characters
+    str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); // Huyền sắc hỏi ngã nặng
+    str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // Â, Ê, Ă, Ơ, Ư
+
+    return toUpperCase ? str.toUpperCase() : str;
+  }
+
   const { pathname } = useLocation();
   let URL = `${SERVER}/api/movie/${slug}`;
-
+  
   useEffect(() => {
     let endpoint = '';
     let method = 'get';
@@ -98,6 +116,7 @@ function Movie() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    console.clear();
   }, [pathname]);
 
   const handleClick = (event) => {
@@ -128,7 +147,7 @@ function Movie() {
           <Breadcrumbs mb={3} separator="›" aria-label="breadcrumb">
             {breadcrumbs}
           </Breadcrumbs>
-          <Grid container spacing={2} id="grid-anime">
+          <Grid container spacing={2} id="grid-anime" style={{backgroundImage: `url('${data.poster_url}')`, backgroundSizet: 'cover'}}>
             <Grid item xs={3}>
               <Box sx={{ pt: '100%', position: 'relative', height: '450px' }}>
                 <ProductImgStyle alt={data.name} src={data.thumb_url ? data.thumb_url : ''} />
@@ -208,6 +227,21 @@ function Movie() {
                   sx={{ marginTop: '10px' }}
                 />
                 <Box sx={{ marginTop: '20px' }}>
+                  <Typography sx={{ fontWeight: '700' }}>The loai: </Typography>
+                  {data.category &&
+                    data.category.map((cat, index) => (
+                      <Chip
+                        key={index}
+                        sx={{ margin: '5px', cursor: 'pointer' }}
+                        label={cat.name}
+                        color="error"
+                        clickable
+                        onClick={() => {navigate(`/movie/category/${convertViToEn(cat.name.toLocaleLowerCase().split(' ').join('-'))}`);}}
+                      />
+                    ))}
+                </Box>
+                <Box sx={{ marginTop: '20px' }}>
+                <Typography sx={{ fontWeight: '700' }}>Dien vien: </Typography>
                   {data.actor &&
                     data.actor.map((s, index) => (
                       <Chip
@@ -226,7 +260,7 @@ function Movie() {
                     style={{ fontSize: '14px' }}
                   ></div>
                 </Typography>
-                <Divider sx={{ margin: '10px 0' }}></Divider>
+                {/* <Divider sx={{ margin: '10px 0' }}></Divider> */}
                 {/* <Typography>Tags:</Typography>
                     <Box>
                         {data.tags && data.tags.map((tag, index) => <Chip key={index} sx={{margin: "5px", cursor: "pointer"}} label={tag} color="primary" variant="outlined" clickable/>)}
@@ -237,7 +271,7 @@ function Movie() {
                         {data.genres && data.genres.map((genre, index) => <Chip key={index} sx={{margin: "5px", cursor: "pointer"}} label={genre} color="warning" variant="outlined" clickable/>)}
                     </Box> */}
                 {/* list links to view */}
-                <Divider sx={{ margin: '10px 0' }}></Divider>
+                {/* <Divider sx={{ margin: '10px 0' }}></Divider> */}
 
                 {/* Comment */}
                 {/* <Divider sx={{margin: "20px 0 0 0"}}></Divider> */}
@@ -310,7 +344,7 @@ const ViewListEpisodes = ({ movie }) => {
     <>
 		<div id="fake-iframe" style={{height: '20px'}}></div>
       <Box
-        mt={5} mb={1}
+        mt={1} mb={1}
         style={{ position: 'relative', overflow: 'hidden', width: '100%', paddingTop: '56.25%' }}
       >
 		
@@ -318,7 +352,7 @@ const ViewListEpisodes = ({ movie }) => {
           id="preview-frame"
           src={movieEmbed}
           name="preview-iframe"
-          frameborder="0"
+          frameBorder="0"
           noresize="noresize"
           style={{
             position: 'absolute',
