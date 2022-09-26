@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Tooltip } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Tooltip, Skeleton  } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
@@ -89,7 +89,7 @@ export default function ShopProductCard({movie, index }) {
             </Label>
             </Box>
           }
-          <ProductImgStyle alt={name} src={thumb_url ? thumb_url : ''} />
+          {thumb_url ? <ProductImgStyle alt={name} src={thumb_url} /> : <Skeleton variant="rectangular" width={210} height={118} />}
         </Box>
 
         <Stack spacing={2} sx={{ p: 3 }}>

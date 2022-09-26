@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useState, useEffect, useContext, createContext } from 'react';
 // material
-import { Container, Stack, Typography, Pagination, Box } from '@mui/material';
+import { Container, Stack, Typography, Pagination, Skeleton, Box } from '@mui/material';
 // components
 import Page from '../components/Page';
 import {
@@ -194,9 +194,9 @@ export default function ListMovie({type}) {
               labelId="demo-select-small"
               id="demo-select-small"
               value={''}
-              label="Nhóm:"
-              
+              label="Nhóm:"              
             >
+              <Skeleton />
           {movieTypes.map((gen, index) => 
           // <StyledGenreItem key={`gen+${index}`} to={'/movie/category/'+convertViToEn(gen.toLocaleLowerCase().split(' ').join('-'))}>{gen}</StyledGenreItem>          
                 <MenuItem value={gen}>
@@ -207,7 +207,7 @@ export default function ListMovie({type}) {
           </Select>
             </FormControl>
         </StyledGenreContainer>
-        {listAnime.length > 0 ? <MovieList movies={listAnime} /> : <h2>SEARCHING MOVIE</h2>}
+        {listAnime.length > 0 ? <MovieList movies={listAnime} /> : <FakeSkeleton rows={4} cols={4}></FakeSkeleton>}
         {/* <ProductCartWidget /> */}
       </Container>
       <Stack spacing={2} sx={{alignItems: "center"}}>
@@ -216,4 +216,22 @@ export default function ListMovie({type}) {
       </Stack>
     </Page>
   );
+}
+
+const FakeSkeleton = ({rows, cols}) => {
+  return <>
+    <p>SEARCHING MOVIE</p>
+    
+  {
+    [1,2,3,4].map((row, indexRow) => {
+      return [1,2,3,4].map((col, indexCol) => {
+        return <Box sx={{ pt: 0.5 }} key={`${indexRow} - ${indexCol}`}>
+          <Skeleton />
+          <Skeleton />
+          <Skeleton variant="rectangular" width={210} height={118} />
+        </Box>
+      })
+    })
+  }
+  </>
 }
