@@ -1,4 +1,4 @@
-```heroku subtree push --prefix server master```
+```git subtree push --prefix server heroku master```
 > server: server folder 
 > master: master branch
 
