@@ -171,23 +171,19 @@ router.post('/search', async (req, res, next) => {
         let searchText = decodeURI(req.body.value);
         console.log("searchText ", searchText)
         searchText = convertViToEn(searchText);
-        const movies = await Movie.find({})
-        let fakeMovies = JSON.parse(JSON.stringify(movies));
-        let result = [];
-        for (let i = 0; i < fakeMovies.length; i++){   
-            if(fakeMovies[i]?.unsigned_name.includes(searchText)){
-                result.push(fakeMovies[i]);
-                console.log("i => ", i, " ", fakeMovies[i].slug)                      
-            }
-            // let newName = convertViToEn(fakeMovies[i].name) + " " + convertViToEn(fakeMovies[i].origin_name)
-            // await Movie.findOneAndUpdate({_id: fakeMovies[i]._id}, {unsigned_name: newName})
-            // console.log(i, " => ", newName)    
-            
-        }
+        // const movies = await Movie.find({})
+        // let fakeMovies = JSON.parse(JSON.stringify(movies));
+        // let result = [];
+        // for (let i = 0; i < fakeMovies.length; i++){   
+        //     if(fakeMovies[i]?.unsigned_name.includes(searchText)){
+        //         result.push(fakeMovies[i]);
+        //         console.log("i => ", i, " ", fakeMovies[i].slug)                      
+        //     }                    
+        // }
+        const result = await Movie.find({unsigned_name: {$regex: searchText, $options: 'i'}})
         
-        if(result.length > 0) return res.status(200).json({success: true, data: result});
+        return res.status(200).json({success: true, data: result});
 
-        return res.status(200).json({success: false, data: movies});
     } catch (errors) {
         console.log(errors);
         return res.status(400).json({success: false, message: errors.message});
